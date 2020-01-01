@@ -1,26 +1,29 @@
 {
-  "name": "typeorm-schema-diagram",
-  "version": "1.0.0",
-  "description": "Generates schema diagrams for TypeORM projects",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/eugene-manuilov/typeorm-schema-diagram.git"
-  },
-  "keywords": [
-    "typeorm",
-    "schema",
-    "diagram",
-    "uml",
-    "database"
-  ],
-  "author": "Eugene Manuilov <eugene.manuilov@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/eugene-manuilov/typeorm-schema-diagram/issues"
-  },
-  "homepage": "https://github.com/eugene-manuilov/typeorm-schema-diagram#readme"
+	"name": "typeorm-schema-diagram",
+	"version": "1.0.0",
+	"description": "Generates schema diagrams for TypeORM projects",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/eugene-manuilov/typeorm-schema-diagram.git"
+	},
+	"keywords": [
+		"typeorm",
+		"schema",
+		"diagram",
+		"uml",
+		"database"
+	],
+	"author": "Eugene Manuilov <eugene.manuilov@gmail.com>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/eugene-manuilov/typeorm-schema-diagram/issues"
+	},
+	"homepage": "https://github.com/eugene-manuilov/typeorm-schema-diagram#readme",
+	"dependencies": {
+		"node-plantuml": "^0.9.0"
+	}
 }
