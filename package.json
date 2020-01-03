@@ -24,7 +24,7 @@
 	},
 	"homepage": "https://github.com/eugene-manuilov/typeorm-schema-diagram#readme",
 	"bin": {
-		"typeorm-schema-diagram": "./bin/typeorm-schema-diagram.js"
+		"typeorm-uml": "./bin/typeorm-uml.js"
 	},
 	"dependencies": {
 		"plantuml-encoder": "^1.4.0"
