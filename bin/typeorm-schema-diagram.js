@@ -29,7 +29,7 @@ const { createConnection } = require( 'typeorm' );
 				}
 			}
 
-			uml += `    {method} ${ prefix }${ column.databaseName }: ${ typeof column.type === 'function' ? '' : column.type }\n`;
+			uml += `    {method} ${ prefix }${ column.databaseName }: ${ connection.driver.normalizeType( column ) }${ column.length ? `(${ column.length })` : '' }\n`;
 		} );
 
 		uml += `}\n\n`;
@@ -44,6 +44,11 @@ const { createConnection } = require( 'typeorm' );
 	// https://github.com/typeorm/typeorm/blob/master/src/schema-builder/RdbmsSchemaBuilder.ts
 
 	const format = 'png';
+
+	plantuml.encode( uml, {}, ( err, data ) => {
+		console.log( `http://www.plantuml.com/plantuml/${ format }/${ encodeURIComponent( data ) }` );
+	} );
+
 	const gen = plantuml.generate( { format } );
 	gen.out.pipe(fs.createWriteStream(`output-file.${ format }`));
 	gen.in.write( uml, () => {
