@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-const plantuml = require( 'node-plantuml' );
-const fs = require( 'fs' );
+const plantumlEncoder = require( 'plantuml-encoder' );
 const path = require( 'path' );
 const { createConnection } = require( 'typeorm' );
 
@@ -45,14 +44,5 @@ const { createConnection } = require( 'typeorm' );
 
 	const format = 'png';
 
-	plantuml.encode( uml, {}, ( err, data ) => {
-		console.log( `http://www.plantuml.com/plantuml/${ format }/${ encodeURIComponent( data ) }` );
-	} );
-
-	const gen = plantuml.generate( { format } );
-	gen.out.pipe(fs.createWriteStream(`output-file.${ format }`));
-	gen.in.write( uml, () => {
-		gen.in.end();
-		connection.close();
-	} );
+	console.log( `http://www.plantuml.com/plantuml/${ format }/${ encodeURIComponent( plantumlEncoder.encode( uml ) ) }` );
 } )();
