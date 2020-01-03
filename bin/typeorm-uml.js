@@ -42,7 +42,7 @@ const { createConnection } = require( 'typeorm' );
 
 	// https://github.com/typeorm/typeorm/blob/master/src/schema-builder/RdbmsSchemaBuilder.ts
 
-	const format = 'png';
+	process.stdout.write( `http://www.plantuml.com/plantuml/png/${ encodeURIComponent( plantumlEncoder.encode( uml ) ) }\n` );
 
-	console.log( `http://www.plantuml.com/plantuml/${ format }/${ encodeURIComponent( plantumlEncoder.encode( uml ) ) }` );
+	connection.close();
 } )();
