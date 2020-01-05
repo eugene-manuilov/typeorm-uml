@@ -2,9 +2,11 @@
 	"name": "typeorm-uml",
 	"version": "1.0.0",
 	"description": "Generates schema diagrams for TypeORM projects",
-	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+	"author": "Eugene Manuilov <eugene.manuilov@gmail.com>",
+	"license": "MIT",
+	"homepage": "https://github.com/eugene-manuilov/typeorm-uml#readme",
+	"bugs": {
+		"url": "https://github.com/eugene-manuilov/typeorm-uml/issues"
 	},
 	"repository": {
 		"type": "git",
@@ -17,25 +19,37 @@
 		"uml",
 		"database"
 	],
-	"author": "Eugene Manuilov <eugene.manuilov@gmail.com>",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/eugene-manuilov/typeorm-uml/issues"
+	"engines": {
+		"node": ">=8.0.0"
 	},
-	"homepage": "https://github.com/eugene-manuilov/typeorm-uml#readme",
+	"files": [
+		"/bin",
+		"/lib"
+	],
+	"main": "lib/index.js",
 	"bin": {
-		"typeorm-uml": "./bin/typeorm-uml.js"
+		"typeorm-uml": "./bin/run"
+	},
+	"oclif": {
+		"bin": "typeorm-uml"
+	},
+	"types": "lib/index.d.ts",
+	"scripts": {
+		"build": "rimraf lib && tsc -b",
+		"prepublish": "npm run build",
+		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"dependencies": {
-		"plantuml-encoder": "^1.4.0",
-		"yargs": "^15.1.0"
+		"@oclif/command": "^1.5.19",
+		"plantuml-encoder": "^1.4.0"
 	},
 	"devDependencies": {
-		"@types/yargs": "^13.0.4",
+		"@types/node": "^13.1.4",
+		"rimraf": "^3.0.0",
 		"typeorm": "^0.2.22",
 		"typescript": "^3.7.4"
 	},
 	"peerDependencies": {
-		"typeorm": "^0.2.0"
+		"typeorm": "^0.0.0"
 	}
 }
