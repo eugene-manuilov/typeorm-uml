@@ -1,5 +1,5 @@
 {
-	"name": "typeorm-schema-diagram",
+	"name": "typeorm-uml",
 	"version": "1.0.0",
 	"description": "Generates schema diagrams for TypeORM projects",
 	"main": "index.js",
@@ -8,7 +8,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/eugene-manuilov/typeorm-schema-diagram.git"
+		"url": "git+https://github.com/eugene-manuilov/typeorm-uml.git"
 	},
 	"keywords": [
 		"typeorm",
@@ -20,17 +20,20 @@
 	"author": "Eugene Manuilov <eugene.manuilov@gmail.com>",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/eugene-manuilov/typeorm-schema-diagram/issues"
+		"url": "https://github.com/eugene-manuilov/typeorm-uml/issues"
 	},
-	"homepage": "https://github.com/eugene-manuilov/typeorm-schema-diagram#readme",
+	"homepage": "https://github.com/eugene-manuilov/typeorm-uml#readme",
 	"bin": {
 		"typeorm-uml": "./bin/typeorm-uml.js"
 	},
 	"dependencies": {
-		"plantuml-encoder": "^1.4.0"
+		"plantuml-encoder": "^1.4.0",
+		"yargs": "^15.1.0"
 	},
 	"devDependencies": {
-		"typeorm": "^0.2.22"
+		"@types/yargs": "^13.0.4",
+		"typeorm": "^0.2.22",
+		"typescript": "^3.7.4"
 	},
 	"peerDependencies": {
 		"typeorm": "^0.2.0"
