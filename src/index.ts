@@ -1,4 +1,4 @@
-import { Command } from '@oclif/command';
+import { Command, flags } from '@oclif/command';
 import * as plantumlEncoder from 'plantuml-encoder';
 import { resolve, dirname } from 'path';
 import { createConnection, EntityMetadata, Connection } from 'typeorm';
@@ -17,18 +17,27 @@ class TypeormUmlCommand extends Command {
 		},
 	];
 
+	static flags = {
+		format: flags.string( {
+			char: 'f',
+			description: 'The diagram file format.',
+			default: 'png',
+			options: ['png', 'svg', 'txt'],
+		} ),
+	};
+
 	/**
 	 * Executes this command.
 	 * 
 	 * @async
 	 */
 	public async run(): Promise<any> {
-		const { args } = this.parse( TypeormUmlCommand );
+		const { args, flags } = this.parse( TypeormUmlCommand );
 
 		const configPath = resolve( process.cwd(), args.ormconfig );
 		process.chdir( dirname( configPath ) );
 
-		const url = await this.getUrl( configPath );
+		const url = await this.getUrl( configPath, flags.format );
 
 		// https://github.com/typeorm/typeorm/blob/master/src/schema-builder/RdbmsSchemaBuilder.ts
 
@@ -40,16 +49,17 @@ class TypeormUmlCommand extends Command {
 	 * 
 	 * @async
 	 * @param {string} configPath A path to Typeorm config file.
+	 * @param {string} format A diagram file format.
 	 * @returns {string} A plantuml string.
 	 */
-	private async getUrl( configPath: string ): Promise<string> {
+	private async getUrl( configPath: string, format: string ): Promise<string> {
 		const connection = await createConnection( require( configPath ) );
 		const uml = this.buildUml( connection );
 		const encodedUml = plantumlEncoder.encode( uml );
 
 		connection.close();
 
-		return `http://www.plantuml.com/plantuml/png/${ encodeURIComponent( encodedUml ) }`;
+		return `http://www.plantuml.com/plantuml/${ encodeURIComponent( format ) }/${ encodeURIComponent( encodedUml ) }`;
 	}
 
 	private buildUml( connection: Connection ): string {
