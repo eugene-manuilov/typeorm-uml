@@ -5,6 +5,11 @@ import { createConnection, EntityMetadata, Connection } from 'typeorm';
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { ForeignKeyMetadata } from 'typeorm/metadata/ForeignKeyMetadata';
 
+interface TypeormUmlCommandFlags {
+	format: string,
+	monochrome: boolean,
+}
+
 class TypeormUmlCommand extends Command {
 
 	static description = 'Generates a database UML diagram based on Typeorm entities';
@@ -24,6 +29,10 @@ class TypeormUmlCommand extends Command {
 			default: 'png',
 			options: ['png', 'svg', 'txt'],
 		} ),
+		monochrome: flags.boolean( {
+			description: 'Whether or not to use monochrome colors.',
+			default: false,
+		} ),
 	};
 
 	/**
@@ -37,10 +46,7 @@ class TypeormUmlCommand extends Command {
 		const configPath = resolve( process.cwd(), args.ormconfig );
 		process.chdir( dirname( configPath ) );
 
-		const url = await this.getUrl( configPath, flags.format );
-
-		// https://github.com/typeorm/typeorm/blob/master/src/schema-builder/RdbmsSchemaBuilder.ts
-
+		const url = await this.getUrl( configPath, flags );
 		process.stdout.write( `${ url }\n` );
 	}
 
@@ -49,27 +55,40 @@ class TypeormUmlCommand extends Command {
 	 * 
 	 * @async
 	 * @param {string} configPath A path to Typeorm config file.
-	 * @param {string} format A diagram file format.
+	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
 	 * @returns {string} A plantuml string.
 	 */
-	private async getUrl( configPath: string, format: string ): Promise<string> {
+	private async getUrl( configPath: string, flags: TypeormUmlCommandFlags ): Promise<string> {
 		const connection = await createConnection( require( configPath ) );
-		const uml = this.buildUml( connection );
+		const uml = this.buildUml( connection, flags );
 		const encodedUml = plantumlEncoder.encode( uml );
 
 		connection.close();
 
-		return `http://www.plantuml.com/plantuml/${ encodeURIComponent( format ) }/${ encodeURIComponent( encodedUml ) }`;
+		const format = encodeURIComponent( flags.format );
+		const schema = encodeURIComponent( encodedUml );
+
+		return `http://www.plantuml.com/plantuml/${ format }/${ schema }`;
 	}
 
 	/**
 	 * Builds database uml and returns it.
 	 * 
 	 * @param {Connection} connection A database connection.
+	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
 	 * @returns {string} An uml string.
 	 */
-	private buildUml( connection: Connection ): string {
-		let uml = `@startuml\n`;
+	private buildUml( connection: Connection, flags: TypeormUmlCommandFlags ): string {
+		let uml = `@startuml\n\n`;
+
+		uml += `!define table(x) class x << (T,#FFAAAA) >>\n`;
+		uml += `!define pkey(x) <b>x</b>\n`;
+		uml += `hide stereotypes\n`;
+		uml += `hide fields\n\n`;
+
+		if ( flags.monochrome ) {
+			uml += `skinparam monochrome true\n\n`;
+		}
 
 		for ( let i = 0, len = connection.entityMetadatas.length; i < len; i++ ) {
 			uml += this.buildClass( connection.entityMetadatas[i], connection );
@@ -88,7 +107,7 @@ class TypeormUmlCommand extends Command {
 	 * @returns {string} An uml class string.
 	 */
 	private buildClass( entity: EntityMetadata, connection: Connection ): string {
-		let uml = `\nclass ${ entity.tableNameWithoutPrefix } {\n`;
+		let uml = `\ntable( ${ entity.tableNameWithoutPrefix } ) {\n`;
 
 		for ( let i = 0, len = entity.columns.length; i < len; i++ ) {
 			uml += this.buildColumn( entity.columns[i], entity, connection );
@@ -112,9 +131,12 @@ class TypeormUmlCommand extends Command {
 	 * @returns {string} An uml column string.
 	 */
 	private buildColumn( column: ColumnMetadata, entity: EntityMetadata, connection: Connection ): string {
+		let columnName = column.databaseName;
 		let prefix = '';
+
 		if ( column.isPrimary ) {
 			prefix = '+';
+			columnName = `pkey( ${ columnName } )`;
 		} else if ( Array.isArray( entity.indices ) && entity.indices.length > 0 ) {
 			const index = entity.indices.find( ( idx ) => idx.columns.map( column => column.databaseName ).includes( column.databaseName ) );
 			if ( index ) {
@@ -122,7 +144,7 @@ class TypeormUmlCommand extends Command {
 			}
 		}
 
-		return `    {method} ${ prefix }${ column.databaseName }: ${ connection.driver.normalizeType( column ) }${ column.length ? `(${ column.length })` : '' }\n`;
+		return `\t{method} ${ prefix }${ columnName }: ${ connection.driver.normalizeType( column ) }${ column.length ? `(${ column.length })` : '' }\n`;
 	}
 
 	/**
