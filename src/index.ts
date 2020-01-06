@@ -62,6 +62,12 @@ class TypeormUmlCommand extends Command {
 		return `http://www.plantuml.com/plantuml/${ encodeURIComponent( format ) }/${ encodeURIComponent( encodedUml ) }`;
 	}
 
+	/**
+	 * Builds database uml and returns it.
+	 * 
+	 * @param {Connection} connection A database connection.
+	 * @returns {string} An uml string.
+	 */
 	private buildUml( connection: Connection ): string {
 		let uml = `@startuml\n`;
 
