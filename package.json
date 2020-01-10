@@ -1,7 +1,7 @@
 {
 	"name": "typeorm-uml",
 	"version": "1.0.0",
-	"description": "Generates schema diagrams for TypeORM projects",
+	"description": "Generates UML diagrams for TypeORM projects",
 	"author": "Eugene Manuilov <eugene.manuilov@gmail.com>",
 	"license": "MIT",
 	"homepage": "https://github.com/eugene-manuilov/typeorm-uml#readme",
