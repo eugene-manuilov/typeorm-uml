@@ -50,6 +50,6 @@
 		"typescript": "^3.7.4"
 	},
 	"peerDependencies": {
-		"typeorm": "^0.0.0"
+		"typeorm": "^0.2.0"
 	}
 }
