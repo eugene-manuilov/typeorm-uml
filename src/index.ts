@@ -10,6 +10,13 @@ interface TypeormUmlCommandFlags {
 	monochrome: boolean,
 }
 
+interface ColumnDataTypeDefaults {
+	length?: string,
+	width?: number,
+	precision?: number,
+	scale?: number,
+}
+
 class TypeormUmlCommand extends Command {
 
 	static description = 'Generates a database UML diagram based on Typeorm entities';
@@ -39,6 +46,7 @@ class TypeormUmlCommand extends Command {
 	 * Executes this command.
 	 * 
 	 * @async
+	 * @public
 	 */
 	public async run(): Promise<any> {
 		const { args, flags } = this.parse( TypeormUmlCommand );
@@ -56,8 +64,9 @@ class TypeormUmlCommand extends Command {
 
 	/**
 	 * Builds a plantuml URL and returns it.
-	 * 
+	 *
 	 * @async
+	 * @private
 	 * @param {string} configPath A path to Typeorm config file.
 	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
 	 * @returns {string} A plantuml string.
@@ -77,7 +86,8 @@ class TypeormUmlCommand extends Command {
 
 	/**
 	 * Builds database uml and returns it.
-	 * 
+	 *
+	 * @private
 	 * @param {Connection} connection A database connection.
 	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
 	 * @returns {string} An uml string.
@@ -105,7 +115,8 @@ class TypeormUmlCommand extends Command {
 
 	/**
 	 * Builds an uml class for an entity and returns it.
-	 * 
+	 *
+	 * @private
 	 * @param {EntityMetadata} entity An entity metadata.
 	 * @param {Connection} connection A database connection.
 	 * @returns {string} An uml class string.
@@ -128,7 +139,8 @@ class TypeormUmlCommand extends Command {
 
 	/**
 	 * Builds an uml column and returns it.
-	 * 
+	 *
+	 * @private
 	 * @param {ColumnMetadata} column A column metadata.
 	 * @param {EntityMetadata} entity An entity metadata.
 	 * @param {Connection} connection A database connection.
@@ -148,18 +160,57 @@ class TypeormUmlCommand extends Command {
 			}
 		}
 
-		return `\t{method} ${ prefix }${ columnName }: ${ connection.driver.normalizeType( column ) }${ column.length ? `(${ column.length })` : '' }\n`;
+		let length = this.getColumnLength( column );
+		const type = connection.driver.normalizeType( column );
+
+		if ( ! length && connection.driver.dataTypeDefaults[type] ) {
+			length = this.getColumnLength( ( connection.driver.dataTypeDefaults[type] as unknown ) as ColumnDataTypeDefaults );
+		}
+
+		if ( length ) {
+			length = `(${ length })`;
+		}
+
+		return `\t{method} ${ prefix }${ columnName }: ${ type.toUpperCase() }${ length }\n`;
 	}
 
 	/**
 	 * Builds am uml connection string and returns it.
-	 * 
+	 *
+	 * @private
 	 * @param {ForeignKeyMetadata} foreignKey A foreign key metadata.
 	 * @param {EntityMetadata} entity An entity metadata.
 	 * @returns {string} An uml connection string.
 	 */
 	private buildForeignKeys( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
 		return `${ entity.tableNameWithoutPrefix } "\*" --> "1" ${ foreignKey.referencedTablePath }\n\n`;
+	}
+
+	/**
+	 * Returns a column size or default size if not provided.
+	 *
+	 * @private
+	 * @param {ColumnMetadata | ColumnDataTypeDefaults} column The column instance or data type defaults.
+	 * @returns {string} The column size on success, otherwise empty string.
+	 */
+	private getColumnLength( column: ColumnMetadata | ColumnDataTypeDefaults ): string {
+		if ( column.length ) {
+			return column.length;
+		}
+
+		if ( column.width ) {
+			return column.width.toString();
+		}
+
+		if ( column.precision ) {
+			if ( column.scale ) {
+				return `${ column.precision }, ${ column.scale }`;
+			}
+
+			return column.precision.toString();
+		}
+
+		return '';
 	}
 
 }
