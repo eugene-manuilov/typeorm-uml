@@ -1,13 +1,13 @@
 import { Command, flags } from '@oclif/command';
 import * as plantumlEncoder from 'plantuml-encoder';
-import { resolve, dirname } from 'path';
-import { createConnection, EntityMetadata, Connection } from 'typeorm';
+import { createConnection, EntityMetadata, Connection, ConnectionOptionsReader } from 'typeorm';
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { ForeignKeyMetadata } from 'typeorm/metadata/ForeignKeyMetadata';
 
 interface TypeormUmlCommandFlags {
-	format: string,
-	monochrome: boolean,
+	format?: string,
+	monochrome?: boolean,
+	connection?: string,
 }
 
 interface ColumnDataTypeDefaults {
@@ -19,17 +19,23 @@ interface ColumnDataTypeDefaults {
 
 class TypeormUmlCommand extends Command {
 
-	static description = 'Generates a database UML diagram based on Typeorm entities';
+	static description = 'Generates a database UML diagram based on Typeorm entities.';
 
 	static args = [
 		{
-			name: 'ormconfig',
-			required: true,
-			description: 'Path to Typeorm config file',
+			name: 'configName',
+			required: false,
+			description: 'Path to the Typeorm config file.',
+			default: 'ormconfig.json',
 		},
 	];
 
 	static flags = {
+		connection: flags.string( {
+			char: 'c',
+			description: 'The connection name.',
+			default: 'default',
+		} ),
 		format: flags.string( {
 			char: 'f',
 			description: 'The diagram file format.',
@@ -49,13 +55,9 @@ class TypeormUmlCommand extends Command {
 	 * @public
 	 */
 	public async run(): Promise<any> {
-		const { args, flags } = this.parse( TypeormUmlCommand );
-
-		const configPath = resolve( process.cwd(), args.ormconfig );
-		process.chdir( dirname( configPath ) );
-
 		try {
-			const url = await this.getUrl( configPath, flags );
+			const { args, flags } = this.parse( TypeormUmlCommand );
+			const url = await this.getUrl( args.configName, flags );
 			process.stdout.write( `${ url }\n` );
 		} catch ( e ) {
 			this.error( e.message );
@@ -67,12 +69,19 @@ class TypeormUmlCommand extends Command {
 	 *
 	 * @async
 	 * @private
-	 * @param {string} configPath A path to Typeorm config file.
+	 * @param {string} configName A path to Typeorm config file.
 	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
 	 * @returns {string} A plantuml string.
 	 */
-	private async getUrl( configPath: string, flags: TypeormUmlCommandFlags ): Promise<string> {
-		const connection = await createConnection( require( configPath ) );
+	private async getUrl( configName: string, flags: TypeormUmlCommandFlags ): Promise<string> {
+		const connectionOptionsReader = new ConnectionOptionsReader( {
+			root: process.cwd(),
+			configName,
+		} );
+
+		const connectionOptions = await connectionOptionsReader.get( flags.connection );
+		const connection = await createConnection( connectionOptions );
+
 		const uml = this.buildUml( connection, flags );
 		const encodedUml = plantumlEncoder.encode( uml );
 

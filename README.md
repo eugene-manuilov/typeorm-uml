@@ -12,14 +12,15 @@ npm i -D typeorm-urml
 
 ```sh-session
 USAGE
-  $ typeorm-uml ORMCONFIG
+  $ typeorm-uml [CONFIGNAME]
 
 ARGUMENTS
-  ORMCONFIG  Path to Typeorm config file
+  CONFIGNAME  [default: ormconfig.json] Path to the Typeorm config file.
 
 OPTIONS
-  -f, --format=png|svg|txt  [default: png] The diagram file format.
-  --monochrome              Whether or not to use monochrome colors.
+  -c, --connection=connection  [default: default] The connection name.
+  -f, --format=png|svg|txt     [default: png] The diagram file format.
+  --monochrome                 Whether or not to use monochrome colors.
 ```
 
 ## Contribute
