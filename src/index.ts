@@ -46,8 +46,12 @@ class TypeormUmlCommand extends Command {
 		const configPath = resolve( process.cwd(), args.ormconfig );
 		process.chdir( dirname( configPath ) );
 
-		const url = await this.getUrl( configPath, flags );
-		process.stdout.write( `${ url }\n` );
+		try {
+			const url = await this.getUrl( configPath, flags );
+			process.stdout.write( `${ url }\n` );
+		} catch ( e ) {
+			this.error( e.message );
+		}
 	}
 
 	/**
