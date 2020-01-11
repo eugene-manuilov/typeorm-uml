@@ -8,8 +8,20 @@ import { createConnection, EntityMetadata, Connection, ConnectionOptionsReader }
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { ForeignKeyMetadata } from 'typeorm/metadata/ForeignKeyMetadata';
 
-import { TypeormUmlCommandFlags } from './TypeormUmlCommandFlags';
-import { ColumnDataTypeDefaults } from './ColumnDataTypeDefaults';
+interface ColumnDataTypeDefaults {
+	length?: string,
+	width?: number,
+	precision?: number,
+	scale?: number,
+}
+
+interface TypeormUmlCommandFlags {
+	format?: string,
+	monochrome?: boolean,
+	connection?: string,
+	include?: string,
+	exclude?: string,
+}
 
 class TypeormUmlCommand extends Command {
 
