@@ -1,3 +1,7 @@
+import { isAbsolute, resolve } from 'path';
+import { createWriteStream } from 'fs';
+import { get } from 'http';
+
 import { Command, flags } from '@oclif/command';
 import * as plantumlEncoder from 'plantuml-encoder';
 import { createConnection, EntityMetadata, Connection, ConnectionOptionsReader } from 'typeorm';
@@ -46,6 +50,11 @@ class TypeormUmlCommand extends Command {
 			description: 'Whether or not to use monochrome colors.',
 			default: false,
 		} ),
+		download: flags.string( {
+			char: 'd',
+			description: 'The filename where to download the diagram.',
+			default: '',
+		} ),
 	};
 
 	/**
@@ -58,7 +67,11 @@ class TypeormUmlCommand extends Command {
 		try {
 			const { args, flags } = this.parse( TypeormUmlCommand );
 			const url = await this.getUrl( args.configName, flags );
-			process.stdout.write( `${ url }\n` );
+			if ( flags.download ) {
+				await this.download( url, flags.download );
+			} else {
+				process.stdout.write( `${ url }\n` );
+			}
 		} catch ( e ) {
 			this.error( e.message );
 		}
@@ -91,6 +104,25 @@ class TypeormUmlCommand extends Command {
 		const schema = encodeURIComponent( encodedUml );
 
 		return `http://www.plantuml.com/plantuml/${ format }/${ schema }`;
+	}
+
+	/**
+	 * Downloads image into a file.
+	 * 
+	 * @private
+	 * @param {string} url The URL to download.
+	 * @param {string} filename The output filename.
+	 * @returns {Promise} A promise object.
+	 */
+	private download( url: string, filename: string ): Promise<void> {
+		const path = ! isAbsolute( filename ) ? resolve( process.cwd(), filename ) : filename;
+
+		return new Promise( ( resolve ) => {
+			get( url, ( response ) => {
+				response.pipe( createWriteStream( path ) );
+				response.on( 'end', resolve );
+			} );
+		} );
 	}
 
 	/**

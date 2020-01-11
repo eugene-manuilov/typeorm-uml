@@ -37,6 +37,7 @@ ARGUMENTS
 
 OPTIONS
   -c, --connection=connection  [default: default] The connection name.
+  -d, --download=download      The filename where to download the diagram.
   -f, --format=png|svg|txt     [default: png] The diagram file format.
   --monochrome                 Whether or not to use monochrome colors.
 ```
