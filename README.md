@@ -38,7 +38,9 @@ ARGUMENTS
 OPTIONS
   -c, --connection=connection  [default: default] The connection name.
   -d, --download=download      The filename where to download the diagram.
+  -e, --exclude=exclude        Comma-separated list of entities to exclude from the diagram.
   -f, --format=png|svg|txt     [default: png] The diagram file format.
+  -i, --include=include        Comma-separated list of entities to include into the diagram.
   --monochrome                 Whether or not to use monochrome colors.
 ```
 

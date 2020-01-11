@@ -43,7 +43,14 @@ class TypeormUmlCommand extends Command {
 		download: flags.string( {
 			char: 'd',
 			description: 'The filename where to download the diagram.',
-			default: '',
+		} ),
+		exclude: flags.string( {
+			char: 'e',
+			description: 'Comma-separated list of entities to exclude from the diagram.',
+		} ),
+		include: flags.string( {
+			char: 'i',
+			description: 'Comma-separated list of entities to include into the diagram.',
 		} ),
 	};
 
@@ -135,8 +142,21 @@ class TypeormUmlCommand extends Command {
 			uml += `skinparam monochrome true\n\n`;
 		}
 
+		const exclude = ( flags.exclude || '' ).split( ',' );
+		const include = ( flags.include || '' ).split( ',' );
+
 		for ( let i = 0, len = connection.entityMetadatas.length; i < len; i++ ) {
-			uml += this.buildClass( connection.entityMetadatas[i], connection );
+			const entity = connection.entityMetadatas[i];
+
+			if ( exclude.includes( entity.name ) ) {
+				continue;
+			}
+
+			if ( include.length && ! include.includes( entity.name ) ) {
+				continue;
+			}
+			
+			uml += this.buildClass( entity, connection );
 		}
 
 		uml += `@enduml\n`;
