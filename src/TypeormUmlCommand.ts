@@ -154,8 +154,8 @@ class TypeormUmlCommand extends Command {
 			uml += `skinparam monochrome true\n\n`;
 		}
 
-		const exclude = ( flags.exclude || '' ).split( ',' );
-		const include = ( flags.include || '' ).split( ',' );
+		const exclude = ( flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
+		const include = ( flags.include || '' ).split( ',' ).filter( ( item ) => item.trim().length );
 
 		for ( let i = 0, len = connection.entityMetadatas.length; i < len; i++ ) {
 			const entity = connection.entityMetadatas[i];
