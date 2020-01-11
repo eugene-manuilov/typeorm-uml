@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-require( '../lib' )
+require( '../lib/TypeormUmlCommand' )
 	.run()
 	.catch( require( '@oclif/errors/handle' ) );
