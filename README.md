@@ -49,6 +49,18 @@ If you use `.ts` entities in your Typeorm config, then run this command with `ts
 ts-node ./node_modules/.bin/typeorm-uml ormconfig.json
 ```
 
+## Examples
+
+### typeorm/typescript-example
+
+https://github.com/typeorm/typescript-example
+
+```sh-session
+typeorm --format=svg --monochrome
+```
+
+![typeorm/typescript-example](http://www.plantuml.com/plantuml/png/bP9DIyD048RFpgyOuoMh5edGImXBWrZinKC9ugriibEpD9iDkrj8AFtl9ltGMgZe76SUtcS6PkAyi7wjAu1hIKjL4tgHLnIs38jAE8Sj9Wc6sVtDT9hsnP3pBxHPKJUGISxRv27dK2f9w3nPChvhoEqRIqMLT01kfUf6MA5HczeKfJMwrzar0S3UYeNmz65iXmmtSBNHv4iZjtYtCw6Io6ASlMPX5B6JSIqqnVYMpfzUqdduE1ups7vdDiRv_-LvvQlpm9CfjJx6xFazExSi3kihSelVBndesGNx0Ja6_CHwuqLJS1lWQCGnY8ATu8_eiGameLeEl_09)
+
 ## Contribute
 
 Want to help or have a suggestion? Open a [new ticket](https://github.com/eugene-manuilov/typeorm-uml/issues/new) and we can discuss it or submit a pull request.
