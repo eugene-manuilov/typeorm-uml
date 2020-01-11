@@ -19,8 +19,7 @@ Add a new script to your `package.json` to be able to run it:
     "name": "myproject",
     "scripts": {
         "db:diagram": "typeorm-uml ormconfig.json"
-    },
-    ...
+    }
 }
 ```
 
