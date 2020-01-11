@@ -1,4 +1,4 @@
-# typeorm-uml 1.1.1
+# typeorm-uml 1.1.2
 
 A command line tool to generate UML diagrams for Typeorm projects. It uses [plantuml](https://plantuml.com/) to render diagrams and outputs an URL to a diagram.
 

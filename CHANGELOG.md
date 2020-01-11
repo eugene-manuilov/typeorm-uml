@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.1.2 (2020-01-11) 
+- Fixed UML generation issue
+
 ## v1.1.1 (2020-01-11)
 
 - Fixed build command issue
