@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.1.3 (2020-05-25)
+- 
+
 ## v1.1.2 (2020-01-11) 
 - Fixed UML generation issue
 
