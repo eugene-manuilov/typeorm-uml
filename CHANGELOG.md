@@ -1,7 +1,8 @@
 # Changelog
 
 ## v1.1.3 (2020-05-25)
-- 
+- Fixed typo in the readme file
+- Updated dependencies to the latest versions
 
 ## v1.1.2 (2020-01-11) 
 - Fixed UML generation issue

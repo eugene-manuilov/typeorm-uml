@@ -40,14 +40,14 @@
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"dependencies": {
-		"@oclif/command": "^1.5.19",
+		"@oclif/command": "^1.6.1",
 		"plantuml-encoder": "^1.4.0"
 	},
 	"devDependencies": {
-		"@types/node": "^13.1.4",
-		"rimraf": "^3.0.0",
-		"typeorm": "^0.2.22",
-		"typescript": "^3.7.4"
+		"@types/node": "^13.13.9",
+		"rimraf": "^3.0.2",
+		"typeorm": "^0.2.25",
+		"typescript": "^3.9.3"
 	},
 	"peerDependencies": {
 		"typeorm": "^0.2.0"
