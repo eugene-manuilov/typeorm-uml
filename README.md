@@ -7,7 +7,7 @@ A command line tool to generate UML diagrams for Typeorm projects. It uses [plan
 Install this command as a development dependency to your project:
 
 ```sh-session
-npm i -D typeorm-urml
+npm i -D typeorm-uml
 ```
 
 ## Usage
