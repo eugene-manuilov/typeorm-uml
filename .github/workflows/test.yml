@@ -2,7 +2,7 @@ name: Test
 on:
   - push
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout typeorm-uml
@@ -29,6 +29,6 @@ jobs:
           npx tsc
       - name: Test uml diagram
         working-directory: example
-        run: test "$(../../bin/run)" == "$EXPECTED"
+        run: test "$(node '$GITHUB_WORKSPACE/bin/run')" == "$EXPECTED"
         env:
           EXPECTED: http://www.plantuml.com/plantuml/png/bP5DQy90443Fpg-OffTiMoaHl8Im64Ifbnua56-oSSUwTFD1TWe9ud-lyLl1qkvnvl7UBZjmh2h-pYp0WwQboGbPfPRyMk32AkUmnYX2Ftbv78_ZxH4evGajlwXfoIYLTVIQIbWPJUYOAYguASdj1qj3LZi0sAjnePW-Ywf1WMleh3FYLQ4t-BpJeT4eGfoy9tuGY8jrhZ8AyIEU3j_YgT_hzmLipiwoSFm_7nksjyABBTKSOZAQ9RUL-U7wXjpyzvUqzEHE_O0S1TVOjdYtv3rvsErAz09l5_WZUXm232ZNxOV_0000

@@ -2,6 +2,7 @@
 
 ## v1.2.0 (2020-06-18)
 - Added GitHub Actions to check build process on push.
+- Added GitHub Actions to check generated UML.
 - Reworked typeorm configuration read to skip connecting to the database.
 
 ## v1.1.3 (2020-05-25)
