@@ -4,7 +4,7 @@ import { get } from 'http';
 
 import { Command, flags } from '@oclif/command';
 import * as plantumlEncoder from 'plantuml-encoder';
-import { createConnection, ConnectionOptionsReader } from 'typeorm';
+import { ConnectionOptionsReader, getConnectionManager } from 'typeorm';
 
 import { UmlBuilder } from './UmlBuilder';
 import { TypeormUmlCommandFlags } from './TypeormUmlCommandFlags';
@@ -90,12 +90,14 @@ class TypeormUmlCommand extends Command {
 		} );
 
 		const connectionOptions = await connectionOptionsReader.get( flags.connection );
-		const connection = await createConnection( connectionOptions );
+		const connection = getConnectionManager().create( connectionOptions );
 
 		const uml = this.builder.buildUml( connection, flags );
 		const encodedUml = plantumlEncoder.encode( uml );
 
-		connection.close();
+		if ( connection.isConnected ) {
+			connection.close();
+		}
 
 		const format = encodeURIComponent( flags.format );
 		const schema = encodeURIComponent( encodedUml );

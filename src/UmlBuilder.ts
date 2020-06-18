@@ -1,4 +1,5 @@
 import { EntityMetadata, Connection } from 'typeorm';
+import { ConnectionMetadataBuilder } from 'typeorm/connection/ConnectionMetadataBuilder';
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { ForeignKeyMetadata } from 'typeorm/metadata/ForeignKeyMetadata';
 
@@ -36,8 +37,11 @@ export class UmlBuilder {
 		const exclude = ( flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
 		const include = ( flags.include || '' ).split( ',' ).filter( ( item ) => item.trim().length );
 
-		for ( let i = 0, len = connection.entityMetadatas.length; i < len; i++ ) {
-			const entity = connection.entityMetadatas[i];
+		const connectionMetadataBuilder = new ConnectionMetadataBuilder( connection );
+		const entityMetadatas = connectionMetadataBuilder.buildEntityMetadatas( connection.options.entities || [] );
+
+		for ( let i = 0, len = entityMetadatas.length; i < len; i++ ) {
+			const entity = entityMetadatas[i];
 
 			if ( exclude.includes( entity.name ) ) {
 				continue;
