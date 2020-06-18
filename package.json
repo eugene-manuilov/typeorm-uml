@@ -26,14 +26,14 @@
 		"/bin",
 		"/lib"
 	],
-	"main": "lib/index.js",
+	"main": "lib/TypeormUmlCommand.js",
 	"bin": {
 		"typeorm-uml": "./bin/run"
 	},
 	"oclif": {
 		"bin": "typeorm-uml"
 	},
-	"types": "lib/index.d.ts",
+	"types": "lib/TypeormUmlCommand.d.ts",
 	"scripts": {
 		"build": "rimraf lib && tsc -b --force",
 		"prepublish": "npm run build",
