@@ -44,10 +44,10 @@
 		"plantuml-encoder": "^1.4.0"
 	},
 	"devDependencies": {
-		"@types/node": "^13.13.9",
+		"@types/node": "^14.0.13",
 		"rimraf": "^3.0.2",
 		"typeorm": "^0.2.25",
-		"typescript": "^3.9.3"
+		"typescript": "^3.9.5"
 	},
 	"peerDependencies": {
 		"typeorm": "^0.2.0"
