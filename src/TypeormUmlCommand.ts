@@ -1,5 +1,5 @@
 import { isAbsolute, resolve } from 'path';
-import { createWriteStream } from 'fs';
+import { createWriteStream, writeFileSync } from 'fs';
 import { get } from 'http';
 
 import { Command, flags } from '@oclif/command';
@@ -71,7 +71,12 @@ class TypeormUmlCommand extends Command {
 			}
 
 			if ( flags.format === 'puml' ) {
-				process.stdout.write( `${ uml }\n` );
+				if ( flags.download ) {
+					const path = this.getPath( flags.download );
+					writeFileSync( path, uml );
+				} else {
+					process.stdout.write( `${ uml }\n` );
+				}
 			} else {
 				const url = await this.getUrl( uml, flags );
 				if ( flags.download ) {
@@ -131,14 +136,23 @@ class TypeormUmlCommand extends Command {
 	 * @returns {Promise} A promise object.
 	 */
 	private download( url: string, filename: string ): Promise<void> {
-		const path = ! isAbsolute( filename ) ? resolve( process.cwd(), filename ) : filename;
-
 		return new Promise( ( resolve ) => {
 			get( url, ( response ) => {
-				response.pipe( createWriteStream( path ) );
+				response.pipe( createWriteStream( this.getPath( filename ) ) );
 				response.on( 'end', resolve );
 			} );
 		} );
+	}
+
+	/**
+	 * Get path for file.
+	 *
+	 * @private
+	 * @param {string} filename The output filename.
+	 * @returns {string} The resolved full path of file.
+	 */
+	private getPath( filename: string ): string {
+		return ! isAbsolute( filename ) ? resolve( process.cwd(), filename ) : filename;
 	}
 
 }
