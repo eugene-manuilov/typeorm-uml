@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.2.1 (2020-06-18)
+- Fixed puml diagram downloading issue.
+
 ## v1.2.0 (2020-06-18)
 - Added GitHub Actions to check build process on push.
 - Added GitHub Actions to check generated UML.
