@@ -4,6 +4,7 @@
 - Added GitHub Actions to check build process on push.
 - Added GitHub Actions to check generated UML.
 - Reworked typeorm configuration read to skip connecting to the database.
+- Fixed primary column formatting for TXT format (removed HTML tag).
 
 ## v1.1.3 (2020-05-25)
 - Fixed typo in the readme file.

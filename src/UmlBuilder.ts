@@ -26,7 +26,12 @@ export class UmlBuilder {
 		let uml = `@startuml\n\n`;
 
 		uml += `!define table(x) class x << (T,#FFAAAA) >>\n`;
-		uml += `!define pkey(x) <b>x</b>\n`;
+		if ( flags.format === 'txt' ) {
+			uml += `!define pkey(x) x\n`;
+		} else {
+			uml += `!define pkey(x) <b>x</b>\n`;
+		}
+
 		uml += `hide stereotypes\n`;
 		uml += `hide fields\n\n`;
 
