@@ -33,10 +33,10 @@ export class UmlBuilder {
 		}
 
 		uml += `hide stereotypes\n`;
-		uml += `hide fields\n\n`;
+		uml += `hide fields\n`;
 
 		if ( flags.monochrome ) {
-			uml += `skinparam monochrome true\n\n`;
+			uml += `\nskinparam monochrome true\n`;
 		}
 
 		const exclude = ( flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
@@ -79,10 +79,16 @@ export class UmlBuilder {
 			uml += this.buildColumn( entity.columns[i], entity, connection );
 		}
 
-		uml += `}\n\n`;
+		uml += `}\n`;
 
-		for ( let i = 0, len = entity.foreignKeys.length; i < len; i++ ) {
-			uml += this.buildForeignKeys( entity.foreignKeys[i], entity );
+		if ( entity.foreignKeys.length > 0 ) {
+			uml += '\n';
+
+			for ( let i = 0, len = entity.foreignKeys.length; i < len; i++ ) {
+				uml += this.buildForeignKeys( entity.foreignKeys[i], entity );
+			}
+
+			uml += '\n';
 		}
 
 		return uml;
@@ -134,7 +140,7 @@ export class UmlBuilder {
 	 * @returns {string} An uml connection string.
 	 */
 	protected buildForeignKeys( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
-		return `${ entity.tableNameWithoutPrefix } "\*" --> "1" ${ foreignKey.referencedTablePath }\n\n`;
+		return `${ entity.tableNameWithoutPrefix } "\*" --> "1" ${ foreignKey.referencedTablePath }\n`;
 	}
 
 	/**

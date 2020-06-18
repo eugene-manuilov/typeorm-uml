@@ -3,6 +3,7 @@
 ## v1.2.0 (2020-06-18)
 - Added GitHub Actions to check build process on push.
 - Added GitHub Actions to check generated UML.
+- Added puml format that displays generated UML code.
 - Reworked typeorm configuration read to skip connecting to the database.
 - Fixed primary column formatting for TXT format (removed HTML tag).
 

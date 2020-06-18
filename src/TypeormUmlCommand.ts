@@ -4,7 +4,7 @@ import { get } from 'http';
 
 import { Command, flags } from '@oclif/command';
 import * as plantumlEncoder from 'plantuml-encoder';
-import { ConnectionOptionsReader, getConnectionManager } from 'typeorm';
+import { ConnectionOptionsReader, getConnectionManager, Connection } from 'typeorm';
 
 import { UmlBuilder } from './UmlBuilder';
 import { TypeormUmlCommandFlags } from './TypeormUmlCommandFlags';
@@ -32,7 +32,7 @@ class TypeormUmlCommand extends Command {
 			char: 'f',
 			description: 'The diagram file format.',
 			default: 'png',
-			options: ['png', 'svg', 'txt'],
+			options: ['png', 'svg', 'txt', 'puml'],
 		} ),
 		monochrome: flags.boolean( {
 			description: 'Whether or not to use monochrome colors.',
@@ -63,11 +63,22 @@ class TypeormUmlCommand extends Command {
 	public async run(): Promise<any> {
 		try {
 			const { args, flags } = this.parse( TypeormUmlCommand );
-			const url = await this.getUrl( args.configName, flags );
-			if ( flags.download ) {
-				await this.download( url, flags.download );
+
+			const connection = await this.getConnection( args.configName, flags );
+			const uml = this.builder.buildUml( connection, flags );
+			if ( connection.isConnected ) {
+				await connection.close();
+			}
+
+			if ( flags.format === 'puml' ) {
+				process.stdout.write( `${ uml }\n` );
 			} else {
-				process.stdout.write( `${ url }\n` );
+				const url = await this.getUrl( uml, flags );
+				if ( flags.download ) {
+					await this.download( url, flags.download );
+				} else {
+					process.stdout.write( `${ url }\n` );
+				}
 			}
 		} catch ( e ) {
 			this.error( e.message );
@@ -75,29 +86,35 @@ class TypeormUmlCommand extends Command {
 	}
 
 	/**
-	 * Builds a plantuml URL and returns it.
+	 * Creates and returns Typeorm connection based on selected configuration file.
 	 *
 	 * @async
 	 * @private
 	 * @param {string} configName A path to Typeorm config file.
 	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
-	 * @returns {string} A plantuml string.
+	 * @returns {Connection} A connection instance.
 	 */
-	private async getUrl( configName: string, flags: TypeormUmlCommandFlags ): Promise<string> {
+	private async getConnection( configName: string, flags: TypeormUmlCommandFlags ): Promise<Connection> {
 		const connectionOptionsReader = new ConnectionOptionsReader( {
 			root: process.cwd(),
 			configName,
 		} );
 
 		const connectionOptions = await connectionOptionsReader.get( flags.connection );
-		const connection = getConnectionManager().create( connectionOptions );
+		return getConnectionManager().create( connectionOptions );
+	}
 
-		const uml = this.builder.buildUml( connection, flags );
+	/**
+	 * Builds a plantuml URL and returns it.
+	 *
+	 * @async
+	 * @private
+	 * @param {string} uml The UML diagram.
+	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
+	 * @returns {string} A plantuml string.
+	 */
+	private async getUrl( uml: string, flags: TypeormUmlCommandFlags ): Promise<string> {
 		const encodedUml = plantumlEncoder.encode( uml );
-
-		if ( connection.isConnected ) {
-			connection.close();
-		}
 
 		const format = encodeURIComponent( flags.format );
 		const schema = encodeURIComponent( encodedUml );
