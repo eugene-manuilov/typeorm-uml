@@ -1,15 +1,22 @@
 # Changelog
 
+## v1.2.0 (2020-06-18)
+- Added GitHub Actions to check build process on push.
+- Added GitHub Actions to check generated UML.
+- Added puml format that displays generated UML code.
+- Reworked typeorm configuration read to skip connecting to the database.
+- Fixed primary column formatting for TXT format (removed HTML tag).
+
 ## v1.1.3 (2020-05-25)
-- Fixed typo in the readme file
-- Updated dependencies to the latest versions
+- Fixed typo in the readme file.
+- Updated dependencies to the latest versions.
 
 ## v1.1.2 (2020-01-11) 
-- Fixed UML generation issue
+- Fixed UML generation issue.
 
 ## v1.1.1 (2020-01-11)
 
-- Fixed build command issue
+- Fixed build command issue.
 
 ## v1.1.0 (2020-01-11)
 

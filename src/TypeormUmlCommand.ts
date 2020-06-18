@@ -4,24 +4,10 @@ import { get } from 'http';
 
 import { Command, flags } from '@oclif/command';
 import * as plantumlEncoder from 'plantuml-encoder';
-import { createConnection, EntityMetadata, Connection, ConnectionOptionsReader } from 'typeorm';
-import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
-import { ForeignKeyMetadata } from 'typeorm/metadata/ForeignKeyMetadata';
+import { ConnectionOptionsReader, getConnectionManager, Connection } from 'typeorm';
 
-interface ColumnDataTypeDefaults {
-	length?: string,
-	width?: number,
-	precision?: number,
-	scale?: number,
-}
-
-interface TypeormUmlCommandFlags {
-	format?: string,
-	monochrome?: boolean,
-	connection?: string,
-	include?: string,
-	exclude?: string,
-}
+import { UmlBuilder } from './UmlBuilder';
+import { TypeormUmlCommandFlags } from './TypeormUmlCommandFlags';
 
 class TypeormUmlCommand extends Command {
 
@@ -46,7 +32,7 @@ class TypeormUmlCommand extends Command {
 			char: 'f',
 			description: 'The diagram file format.',
 			default: 'png',
-			options: ['png', 'svg', 'txt'],
+			options: ['png', 'svg', 'txt', 'puml'],
 		} ),
 		monochrome: flags.boolean( {
 			description: 'Whether or not to use monochrome colors.',
@@ -66,6 +52,8 @@ class TypeormUmlCommand extends Command {
 		} ),
 	};
 
+	protected readonly builder = new UmlBuilder();
+
 	/**
 	 * Executes this command.
 	 * 
@@ -75,11 +63,22 @@ class TypeormUmlCommand extends Command {
 	public async run(): Promise<any> {
 		try {
 			const { args, flags } = this.parse( TypeormUmlCommand );
-			const url = await this.getUrl( args.configName, flags );
-			if ( flags.download ) {
-				await this.download( url, flags.download );
+
+			const connection = await this.getConnection( args.configName, flags );
+			const uml = this.builder.buildUml( connection, flags );
+			if ( connection.isConnected ) {
+				await connection.close();
+			}
+
+			if ( flags.format === 'puml' ) {
+				process.stdout.write( `${ uml }\n` );
 			} else {
-				process.stdout.write( `${ url }\n` );
+				const url = await this.getUrl( uml, flags );
+				if ( flags.download ) {
+					await this.download( url, flags.download );
+				} else {
+					process.stdout.write( `${ url }\n` );
+				}
 			}
 		} catch ( e ) {
 			this.error( e.message );
@@ -87,27 +86,35 @@ class TypeormUmlCommand extends Command {
 	}
 
 	/**
-	 * Builds a plantuml URL and returns it.
+	 * Creates and returns Typeorm connection based on selected configuration file.
 	 *
 	 * @async
 	 * @private
 	 * @param {string} configName A path to Typeorm config file.
 	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
-	 * @returns {string} A plantuml string.
+	 * @returns {Connection} A connection instance.
 	 */
-	private async getUrl( configName: string, flags: TypeormUmlCommandFlags ): Promise<string> {
+	private async getConnection( configName: string, flags: TypeormUmlCommandFlags ): Promise<Connection> {
 		const connectionOptionsReader = new ConnectionOptionsReader( {
 			root: process.cwd(),
 			configName,
 		} );
 
 		const connectionOptions = await connectionOptionsReader.get( flags.connection );
-		const connection = await createConnection( connectionOptions );
+		return getConnectionManager().create( connectionOptions );
+	}
 
-		const uml = this.buildUml( connection, flags );
+	/**
+	 * Builds a plantuml URL and returns it.
+	 *
+	 * @async
+	 * @private
+	 * @param {string} uml The UML diagram.
+	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
+	 * @returns {string} A plantuml string.
+	 */
+	private async getUrl( uml: string, flags: TypeormUmlCommandFlags ): Promise<string> {
 		const encodedUml = plantumlEncoder.encode( uml );
-
-		connection.close();
 
 		const format = encodeURIComponent( flags.format );
 		const schema = encodeURIComponent( encodedUml );
@@ -132,148 +139,6 @@ class TypeormUmlCommand extends Command {
 				response.on( 'end', resolve );
 			} );
 		} );
-	}
-
-	/**
-	 * Builds database uml and returns it.
-	 *
-	 * @private
-	 * @param {Connection} connection A database connection.
-	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
-	 * @returns {string} An uml string.
-	 */
-	private buildUml( connection: Connection, flags: TypeormUmlCommandFlags ): string {
-		let uml = `@startuml\n\n`;
-
-		uml += `!define table(x) class x << (T,#FFAAAA) >>\n`;
-		uml += `!define pkey(x) <b>x</b>\n`;
-		uml += `hide stereotypes\n`;
-		uml += `hide fields\n\n`;
-
-		if ( flags.monochrome ) {
-			uml += `skinparam monochrome true\n\n`;
-		}
-
-		const exclude = ( flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
-		const include = ( flags.include || '' ).split( ',' ).filter( ( item ) => item.trim().length );
-
-		for ( let i = 0, len = connection.entityMetadatas.length; i < len; i++ ) {
-			const entity = connection.entityMetadatas[i];
-
-			if ( exclude.includes( entity.name ) ) {
-				continue;
-			}
-
-			if ( include.length && ! include.includes( entity.name ) ) {
-				continue;
-			}
-			
-			uml += this.buildClass( entity, connection );
-		}
-
-		uml += `@enduml\n`;
-
-		return uml;
-	}
-
-	/**
-	 * Builds an uml class for an entity and returns it.
-	 *
-	 * @private
-	 * @param {EntityMetadata} entity An entity metadata.
-	 * @param {Connection} connection A database connection.
-	 * @returns {string} An uml class string.
-	 */
-	private buildClass( entity: EntityMetadata, connection: Connection ): string {
-		let uml = `\ntable( ${ entity.tableNameWithoutPrefix } ) {\n`;
-
-		for ( let i = 0, len = entity.columns.length; i < len; i++ ) {
-			uml += this.buildColumn( entity.columns[i], entity, connection );
-		}
-
-		uml += `}\n\n`;
-
-		for ( let i = 0, len = entity.foreignKeys.length; i < len; i++ ) {
-			uml += this.buildForeignKeys( entity.foreignKeys[i], entity );
-		}
-
-		return uml;
-	}
-
-	/**
-	 * Builds an uml column and returns it.
-	 *
-	 * @private
-	 * @param {ColumnMetadata} column A column metadata.
-	 * @param {EntityMetadata} entity An entity metadata.
-	 * @param {Connection} connection A database connection.
-	 * @returns {string} An uml column string.
-	 */
-	private buildColumn( column: ColumnMetadata, entity: EntityMetadata, connection: Connection ): string {
-		let columnName = column.databaseName;
-		let prefix = '';
-
-		if ( column.isPrimary ) {
-			prefix = '+';
-			columnName = `pkey( ${ columnName } )`;
-		} else if ( Array.isArray( entity.indices ) && entity.indices.length > 0 ) {
-			const index = entity.indices.find( ( idx ) => idx.columns.map( column => column.databaseName ).includes( column.databaseName ) );
-			if ( index ) {
-				prefix = index.isUnique ? '~' : '#';
-			}
-		}
-
-		let length = this.getColumnLength( column );
-		const type = connection.driver.normalizeType( column );
-
-		if ( ! length && connection.driver.dataTypeDefaults[type] ) {
-			length = this.getColumnLength( ( connection.driver.dataTypeDefaults[type] as unknown ) as ColumnDataTypeDefaults );
-		}
-
-		if ( length ) {
-			length = `(${ length })`;
-		}
-
-		return `\t{method} ${ prefix }${ columnName }: ${ type.toUpperCase() }${ length }\n`;
-	}
-
-	/**
-	 * Builds am uml connection string and returns it.
-	 *
-	 * @private
-	 * @param {ForeignKeyMetadata} foreignKey A foreign key metadata.
-	 * @param {EntityMetadata} entity An entity metadata.
-	 * @returns {string} An uml connection string.
-	 */
-	private buildForeignKeys( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
-		return `${ entity.tableNameWithoutPrefix } "\*" --> "1" ${ foreignKey.referencedTablePath }\n\n`;
-	}
-
-	/**
-	 * Returns a column size or default size if not provided.
-	 *
-	 * @private
-	 * @param {ColumnMetadata | ColumnDataTypeDefaults} column The column instance or data type defaults.
-	 * @returns {string} The column size on success, otherwise empty string.
-	 */
-	private getColumnLength( column: ColumnMetadata | ColumnDataTypeDefaults ): string {
-		if ( column.length ) {
-			return column.length;
-		}
-
-		if ( column.width ) {
-			return column.width.toString();
-		}
-
-		if ( column.precision ) {
-			if ( column.scale ) {
-				return `${ column.precision }, ${ column.scale }`;
-			}
-
-			return column.precision.toString();
-		}
-
-		return '';
 	}
 
 }
