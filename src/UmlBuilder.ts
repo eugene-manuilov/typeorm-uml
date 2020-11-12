@@ -23,20 +23,21 @@ export class UmlBuilder {
 	 * @returns {string} An uml string.
 	 */
 	public buildUml( connection: Connection, flags: TypeormUmlCommandFlags ): string {
-		let uml = `@startuml\n\n`;
+		let uml = '@startuml\n\n';
 
-		uml += `!define table(x) class x << (T,#FFAAAA) >>\n`;
 		if ( flags.format === 'txt' ) {
-			uml += `!define pkey(x) x\n`;
+			uml += '!define pkey(x) x\n';
 		} else {
-			uml += `!define pkey(x) <b>x</b>\n`;
+			uml += '!define pkey(x) <b>x</b>\n';
 		}
+		uml += '!define table(x) entity x << (T,#FFAAAA) >>\n\n';
 
-		uml += `hide stereotypes\n`;
-		uml += `hide fields\n`;
+		uml += 'hide stereotypes\n';
+		uml += 'hide methods\n\n';
 
+		uml += 'skinparam linetype ortho\n';
 		if ( flags.monochrome ) {
-			uml += `\nskinparam monochrome true\n`;
+			uml += 'skinparam monochrome true\n';
 		}
 
 		const exclude = ( flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
@@ -131,7 +132,7 @@ export class UmlBuilder {
 			length = `(${ length })`;
 		}
 
-		return `\t{method} ${ prefix }${ columnName }: ${ type.toUpperCase() }${ length }\n`;
+		return `  ${ prefix }${ columnName }: ${ type.toUpperCase() }${ length }\n`;
 	}
 
 	/**
@@ -143,7 +144,11 @@ export class UmlBuilder {
 	 * @returns {string} An uml connection string.
 	 */
 	protected buildForeignKeys( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
-		return `${ entity.tableNameWithoutPrefix } "\*" --> "1" ${ foreignKey.referencedTablePath }\n`;
+		const zeroOrMore = '}o';
+		const oneOrMore = '}|';
+		const relationship = foreignKey.columns.some( ( column ) => ! column.isNullable ) ? oneOrMore : zeroOrMore;
+
+		return `${ entity.tableNameWithoutPrefix } ${ relationship }--|| ${ foreignKey.referencedTablePath }\n`;
 	}
 
 	/**
