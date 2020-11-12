@@ -15,7 +15,7 @@ interface ColumnDataTypeDefaults {
 export class UmlBuilder {
 
 	/**
-	 * Builds database uml and returns it.
+	 * Builds database UML and returns it.
 	 *
 	 * @public
 	 * @param {Connection} connection A database connection.
@@ -49,6 +49,7 @@ export class UmlBuilder {
 			throw new Error( 'No entities have been found. Please, check your typeorm config to make sure you have configured it correctly.' );
 		}
 
+		let foreignKeys = '';
 		for ( let i = 0, len = entityMetadatas.length; i < len; i++ ) {
 			const entity = entityMetadatas[i];
 
@@ -61,15 +62,20 @@ export class UmlBuilder {
 			}
 			
 			uml += this.buildClass( entity, connection );
+			foreignKeys += this.buildForeignKeys( entity );
 		}
 
-		uml += `@enduml\n`;
+		if ( foreignKeys.length > 0 ) {
+			uml += `\n${ foreignKeys }\n`;
+		}
+
+		uml += '@enduml\n';
 
 		return uml;
 	}
 
 	/**
-	 * Builds an uml class for an entity and returns it.
+	 * Builds an UML class for an entity and returns it.
 	 *
 	 * @protected
 	 * @param {EntityMetadata} entity An entity metadata.
@@ -83,23 +89,13 @@ export class UmlBuilder {
 			uml += this.buildColumn( entity.columns[i], entity, connection );
 		}
 
-		uml += `}\n`;
-
-		if ( entity.foreignKeys.length > 0 ) {
-			uml += '\n';
-
-			for ( let i = 0, len = entity.foreignKeys.length; i < len; i++ ) {
-				uml += this.buildForeignKeys( entity.foreignKeys[i], entity );
-			}
-
-			uml += '\n';
-		}
+		uml += '}\n';
 
 		return uml;
 	}
 
 	/**
-	 * Builds an uml column and returns it.
+	 * Builds an UML column and returns it.
 	 *
 	 * @protected
 	 * @param {ColumnMetadata} column A column metadata.
@@ -136,14 +132,32 @@ export class UmlBuilder {
 	}
 
 	/**
-	 * Builds am uml connection string and returns it.
+	 * Builds UML connection strings and returns it.
+	 *
+	 * @protected
+	 * @param {EntityMetadata} entity An entity metadata.
+	 */
+	protected buildForeignKeys( entity: EntityMetadata ) {
+		let uml = '';
+
+		if ( entity.foreignKeys.length > 0 ) {
+			for ( let i = 0, len = entity.foreignKeys.length; i < len; i++ ) {
+				uml += this.buildForeignKey( entity.foreignKeys[i], entity );
+			}
+		}
+
+		return uml;
+	}
+
+	/**
+	 * Builds an UML connection string and returns it.
 	 *
 	 * @protected
 	 * @param {ForeignKeyMetadata} foreignKey A foreign key metadata.
 	 * @param {EntityMetadata} entity An entity metadata.
 	 * @returns {string} An uml connection string.
 	 */
-	protected buildForeignKeys( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
+	protected buildForeignKey( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
 		const zeroOrMore = '}o';
 		const oneOrMore = '}|';
 		const relationship = foreignKey.columns.some( ( column ) => ! column.isNullable ) ? oneOrMore : zeroOrMore;
