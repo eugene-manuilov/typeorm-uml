@@ -1,4 +1,4 @@
-import { isAbsolute, resolve } from 'path';
+import { isAbsolute, resolve, dirname, basename } from 'path';
 import { createWriteStream, writeFileSync } from 'fs';
 import { get } from 'http';
 
@@ -101,8 +101,8 @@ class TypeormUmlCommand extends Command {
 	 */
 	private async getConnection( configName: string, flags: TypeormUmlCommandFlags ): Promise<Connection> {
 		const connectionOptionsReader = new ConnectionOptionsReader( {
-			root: process.cwd(),
-			configName,
+			root: isAbsolute( configName ) ? dirname( configName ) : process.cwd(),
+			configName: isAbsolute( configName ) ? basename( configName ) : configName,
 		} );
 
 		const connectionOptions = await connectionOptionsReader.get( flags.connection );
