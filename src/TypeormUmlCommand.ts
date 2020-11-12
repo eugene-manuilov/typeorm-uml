@@ -32,7 +32,7 @@ class TypeormUmlCommand extends Command {
 			char: 'f',
 			description: 'The diagram file format.',
 			default: 'png',
-			options: ['png', 'svg', 'txt', 'puml'],
+			options: [ 'png', 'svg', 'txt', 'puml' ],
 		} ),
 		monochrome: flags.boolean( {
 			description: 'Whether or not to use monochrome colors.',
@@ -56,7 +56,7 @@ class TypeormUmlCommand extends Command {
 
 	/**
 	 * Executes this command.
-	 * 
+	 *
 	 * @async
 	 * @public
 	 */
@@ -135,7 +135,7 @@ class TypeormUmlCommand extends Command {
 
 	/**
 	 * Downloads image into a file.
-	 * 
+	 *
 	 * @private
 	 * @param {string} url The URL to download.
 	 * @param {string} filename The output filename.
@@ -158,7 +158,7 @@ class TypeormUmlCommand extends Command {
 	 * @returns {string} The resolved full path of file.
 	 */
 	private getPath( filename: string ): string {
-		return ! isAbsolute( filename ) ? resolve( process.cwd(), filename ) : filename;
+		return !isAbsolute( filename ) ? resolve( process.cwd(), filename ) : filename;
 	}
 
 }

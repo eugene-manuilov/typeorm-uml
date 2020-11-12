@@ -45,7 +45,7 @@ export class UmlBuilder {
 
 		const connectionMetadataBuilder = new ConnectionMetadataBuilder( connection );
 		const entityMetadatas = connectionMetadataBuilder.buildEntityMetadatas( connection.options.entities || [] );
-		if ( ! entityMetadatas.length ) {
+		if ( !entityMetadatas.length ) {
 			throw new Error( 'No entities have been found. Please, check your typeorm config to make sure you have configured it correctly.' );
 		}
 
@@ -57,10 +57,10 @@ export class UmlBuilder {
 				continue;
 			}
 
-			if ( include.length && ! include.includes( entity.name ) ) {
+			if ( include.length && !include.includes( entity.name ) ) {
 				continue;
 			}
-			
+
 			uml += this.buildClass( entity, connection );
 			foreignKeys += this.buildForeignKeys( entity );
 		}
@@ -120,7 +120,7 @@ export class UmlBuilder {
 		let length = this.getColumnLength( column );
 		const type = connection.driver.normalizeType( column );
 
-		if ( ! length && connection.driver.dataTypeDefaults[type] ) {
+		if ( !length && connection.driver.dataTypeDefaults[type] ) {
 			length = this.getColumnLength( ( connection.driver.dataTypeDefaults[type] as unknown ) as ColumnDataTypeDefaults );
 		}
 
@@ -160,7 +160,7 @@ export class UmlBuilder {
 	protected buildForeignKey( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
 		const zeroOrMore = '}o';
 		const oneOrMore = '}|';
-		const relationship = foreignKey.columns.some( ( column ) => ! column.isNullable ) ? oneOrMore : zeroOrMore;
+		const relationship = foreignKey.columns.some( ( column ) => !column.isNullable ) ? oneOrMore : zeroOrMore;
 
 		return `${ entity.tableNameWithoutPrefix } ${ relationship }--|| ${ foreignKey.referencedTablePath }\n`;
 	}

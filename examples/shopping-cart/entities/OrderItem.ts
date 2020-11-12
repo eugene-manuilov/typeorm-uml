@@ -1,59 +1,62 @@
 import {
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { Order } from "./Order";
-import { Product } from "./Product";
+	Column,
+	Entity,
+	Index,
+	JoinColumn,
+	ManyToOne,
+	PrimaryGeneratedColumn
+} from 'typeorm';
 
-@Index("idx_order_item_product", ["productId"], {})
-@Index("idx_order_item_order", ["orderId"], {})
-@Entity("order_item", { schema: "shop" })
+import { Order } from './Order';
+import { Product } from './Product';
+
+@Index( 'idx_order_item_product', [ 'productId' ], {} )
+@Index( 'idx_order_item_order', [ 'orderId' ], {} )
+@Entity( 'order_item', { schema: 'shop' } )
 export class OrderItem {
-  @PrimaryGeneratedColumn({ type: "bigint", name: "id" })
-  id: string;
 
-  @Column("bigint", { name: "productId" })
-  productId: string;
+	@PrimaryGeneratedColumn( { type: 'bigint', name: 'id' } )
+	id: string;
 
-  @Column("bigint", { name: "orderId" })
-  orderId: string;
+	@Column( 'bigint', { name: 'productId' } )
+	productId: string;
 
-  @Column("varchar", { name: "sku", length: 100 })
-  sku: string;
+	@Column( 'bigint', { name: 'orderId' } )
+	orderId: string;
 
-  @Column("float", { name: "price", precision: 12, default: () => "'0'" })
-  price: number;
+	@Column( 'varchar', { name: 'sku', length: 100 } )
+	sku: string;
 
-  @Column("float", { name: "discount", precision: 12, default: () => "'0'" })
-  discount: number;
+	@Column( 'float', { name: 'price', precision: 12, default: () => "'0'" } )
+	price: number;
 
-  @Column("smallint", { name: "quantity", default: () => "'0'" })
-  quantity: number;
+	@Column( 'float', { name: 'discount', precision: 12, default: () => "'0'" } )
+	discount: number;
 
-  @Column("datetime", { name: "createdAt" })
-  createdAt: Date;
+	@Column( 'smallint', { name: 'quantity', default: () => "'0'" } )
+	quantity: number;
 
-  @Column("datetime", { name: "updatedAt", nullable: true })
-  updatedAt: Date | null;
+	@Column( 'datetime', { name: 'createdAt' } )
+	createdAt: Date;
 
-  @Column("text", { name: "content", nullable: true })
-  content: string | null;
+	@Column( 'datetime', { name: 'updatedAt', nullable: true } )
+	updatedAt: Date | null;
 
-  @ManyToOne(() => Order, (order) => order.orderItems, {
-    onDelete: "RESTRICT",
-    onUpdate: "RESTRICT",
-  })
-  @JoinColumn([{ name: "orderId", referencedColumnName: "id" }])
-  order: Order;
+	@Column( 'text', { name: 'content', nullable: true } )
+	content: string | null;
 
-  @ManyToOne(() => Product, (product) => product.orderItems, {
-    onDelete: "RESTRICT",
-    onUpdate: "RESTRICT",
-  })
-  @JoinColumn([{ name: "productId", referencedColumnName: "id" }])
-  product: Product;
+	@ManyToOne( () => Order, ( order ) => order.orderItems, {
+		onDelete: 'RESTRICT',
+		onUpdate: 'RESTRICT',
+	} )
+	@JoinColumn( [ { name: 'orderId', referencedColumnName: 'id' } ] )
+	order: Order;
+
+	@ManyToOne( () => Product, ( product ) => product.orderItems, {
+		onDelete: 'RESTRICT',
+		onUpdate: 'RESTRICT',
+	} )
+	@JoinColumn( [ { name: 'productId', referencedColumnName: 'id' } ] )
+	product: Product;
+
 }
