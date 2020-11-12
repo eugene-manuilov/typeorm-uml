@@ -15,7 +15,7 @@ interface ColumnDataTypeDefaults {
 export class UmlBuilder {
 
 	/**
-	 * Builds database uml and returns it.
+	 * Builds database UML and returns it.
 	 *
 	 * @public
 	 * @param {Connection} connection A database connection.
@@ -23,20 +23,21 @@ export class UmlBuilder {
 	 * @returns {string} An uml string.
 	 */
 	public buildUml( connection: Connection, flags: TypeormUmlCommandFlags ): string {
-		let uml = `@startuml\n\n`;
+		let uml = '@startuml\n\n';
 
-		uml += `!define table(x) class x << (T,#FFAAAA) >>\n`;
 		if ( flags.format === 'txt' ) {
-			uml += `!define pkey(x) x\n`;
+			uml += '!define pkey(x) x\n';
 		} else {
-			uml += `!define pkey(x) <b>x</b>\n`;
+			uml += '!define pkey(x) <b>x</b>\n';
 		}
+		uml += '!define table(x) entity x << (T,#FFAAAA) >>\n\n';
 
-		uml += `hide stereotypes\n`;
-		uml += `hide fields\n`;
+		uml += 'hide stereotypes\n';
+		uml += 'hide methods\n\n';
 
+		uml += 'skinparam linetype ortho\n';
 		if ( flags.monochrome ) {
-			uml += `\nskinparam monochrome true\n`;
+			uml += 'skinparam monochrome true\n';
 		}
 
 		const exclude = ( flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
@@ -44,7 +45,11 @@ export class UmlBuilder {
 
 		const connectionMetadataBuilder = new ConnectionMetadataBuilder( connection );
 		const entityMetadatas = connectionMetadataBuilder.buildEntityMetadatas( connection.options.entities || [] );
+		if ( ! entityMetadatas.length ) {
+			throw new Error( 'No entities have been found. Please, check your typeorm config to make sure you have configured it correctly.' );
+		}
 
+		let foreignKeys = '';
 		for ( let i = 0, len = entityMetadatas.length; i < len; i++ ) {
 			const entity = entityMetadatas[i];
 
@@ -57,15 +62,20 @@ export class UmlBuilder {
 			}
 			
 			uml += this.buildClass( entity, connection );
+			foreignKeys += this.buildForeignKeys( entity );
 		}
 
-		uml += `@enduml\n`;
+		if ( foreignKeys.length > 0 ) {
+			uml += `\n${ foreignKeys }\n`;
+		}
+
+		uml += '@enduml\n';
 
 		return uml;
 	}
 
 	/**
-	 * Builds an uml class for an entity and returns it.
+	 * Builds an UML class for an entity and returns it.
 	 *
 	 * @protected
 	 * @param {EntityMetadata} entity An entity metadata.
@@ -79,23 +89,13 @@ export class UmlBuilder {
 			uml += this.buildColumn( entity.columns[i], entity, connection );
 		}
 
-		uml += `}\n`;
-
-		if ( entity.foreignKeys.length > 0 ) {
-			uml += '\n';
-
-			for ( let i = 0, len = entity.foreignKeys.length; i < len; i++ ) {
-				uml += this.buildForeignKeys( entity.foreignKeys[i], entity );
-			}
-
-			uml += '\n';
-		}
+		uml += '}\n';
 
 		return uml;
 	}
 
 	/**
-	 * Builds an uml column and returns it.
+	 * Builds an UML column and returns it.
 	 *
 	 * @protected
 	 * @param {ColumnMetadata} column A column metadata.
@@ -128,19 +128,41 @@ export class UmlBuilder {
 			length = `(${ length })`;
 		}
 
-		return `\t{method} ${ prefix }${ columnName }: ${ type.toUpperCase() }${ length }\n`;
+		return `  ${ prefix }${ columnName }: ${ type.toUpperCase() }${ length }\n`;
 	}
 
 	/**
-	 * Builds am uml connection string and returns it.
+	 * Builds UML connection strings and returns it.
+	 *
+	 * @protected
+	 * @param {EntityMetadata} entity An entity metadata.
+	 */
+	protected buildForeignKeys( entity: EntityMetadata ) {
+		let uml = '';
+
+		if ( entity.foreignKeys.length > 0 ) {
+			for ( let i = 0, len = entity.foreignKeys.length; i < len; i++ ) {
+				uml += this.buildForeignKey( entity.foreignKeys[i], entity );
+			}
+		}
+
+		return uml;
+	}
+
+	/**
+	 * Builds an UML connection string and returns it.
 	 *
 	 * @protected
 	 * @param {ForeignKeyMetadata} foreignKey A foreign key metadata.
 	 * @param {EntityMetadata} entity An entity metadata.
 	 * @returns {string} An uml connection string.
 	 */
-	protected buildForeignKeys( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
-		return `${ entity.tableNameWithoutPrefix } "\*" --> "1" ${ foreignKey.referencedTablePath }\n`;
+	protected buildForeignKey( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
+		const zeroOrMore = '}o';
+		const oneOrMore = '}|';
+		const relationship = foreignKey.columns.some( ( column ) => ! column.isNullable ) ? oneOrMore : zeroOrMore;
+
+		return `${ entity.tableNameWithoutPrefix } ${ relationship }--|| ${ foreignKey.referencedTablePath }\n`;
 	}
 
 	/**

@@ -37,6 +37,7 @@
 	"scripts": {
 		"prebuild": "rimraf lib",
 		"build": "tsc -b --force",
+		"watch": "tsc --watch",
 		"prepublish": "npm run build",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"typeorm-uml": "./bin/run"

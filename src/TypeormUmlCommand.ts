@@ -95,16 +95,22 @@ class TypeormUmlCommand extends Command {
 	 *
 	 * @async
 	 * @private
-	 * @param {string} configName A path to Typeorm config file.
+	 * @param {string} configPath A path to Typeorm config file.
 	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
 	 * @returns {Connection} A connection instance.
 	 */
-	private async getConnection( configName: string, flags: TypeormUmlCommandFlags ): Promise<Connection> {
-		const connectionOptionsReader = new ConnectionOptionsReader( {
-			root: isAbsolute( configName ) ? dirname( configName ) : process.cwd(),
-			configName: isAbsolute( configName ) ? basename( configName ) : configName,
-		} );
+	private async getConnection( configPath: string, flags: TypeormUmlCommandFlags ): Promise<Connection> {
+		let root: string = process.cwd();
+		let configName: string = configPath;
 
+		if ( isAbsolute( configName ) ) {
+			root = dirname( configName );
+			configName = basename( configName );
+
+			process.chdir( root );
+		}
+
+		const connectionOptionsReader = new ConnectionOptionsReader( { root, configName } );
 		const connectionOptions = await connectionOptionsReader.get( flags.connection );
 		return getConnectionManager().create( connectionOptions );
 	}
