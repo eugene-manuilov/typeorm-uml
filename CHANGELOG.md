@@ -1,8 +1,12 @@
 # Changelog
 
 ## [Unreleased] - TBD
-- Updated the Builder class to throw an error if no entities have been found.
+- Added an example with a shopping cart database.
+- Updated builder to throw an error if no entities have been found.
+- Updated builder to use entities instead of classes.
+- Updated builder to use entity relationships.
 - Fixed issues when the absolute path to the config file was used.
+- Fixed issues with foreign keys when sometimes foreign keys were defined before referencing tables.
 
 ## [v1.2.1] (2020-06-18)
 - Fixed puml diagram downloading issue.
