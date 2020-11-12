@@ -44,6 +44,9 @@ export class UmlBuilder {
 
 		const connectionMetadataBuilder = new ConnectionMetadataBuilder( connection );
 		const entityMetadatas = connectionMetadataBuilder.buildEntityMetadatas( connection.options.entities || [] );
+		if ( ! entityMetadatas.length ) {
+			throw new Error( 'No entities have been found. Please, check your typeorm config to make sure you have configured it correctly.' );
+		}
 
 		for ( let i = 0, len = entityMetadatas.length; i < len; i++ ) {
 			const entity = entityMetadatas[i];

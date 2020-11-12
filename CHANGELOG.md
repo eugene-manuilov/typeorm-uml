@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased] - TBD
+- Updated the Builder class to throw an error if no entities have been found.
 - Fixed issues when the absolute path to the config file was used.
 
 ## [v1.2.1] (2020-06-18)
