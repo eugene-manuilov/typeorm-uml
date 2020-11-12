@@ -189,6 +189,10 @@ export class UmlBuilder {
 			return column.precision.toString();
 		}
 
+		if (column.enum) {
+			return column.enum.join(',')
+		}
+
 		return '';
 	}
 
