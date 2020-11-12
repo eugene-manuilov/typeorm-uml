@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased] - TBD
+- 
+
+## [v1.3.0] (2020-11-12)
 - Added an example with a shopping cart database.
 - Updated builder to throw an error if no entities have been found.
 - Updated builder to use entities instead of classes.
@@ -35,7 +38,8 @@
 - Added `--include` option to include only specific entities to the diagram.
 - Added `--exclude` option to exclude specific entities from the diagram.
 
-[Unreleased]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.2.1...master
+[Unreleased]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.3.0...master
+[v1.3.0]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.2.1...v1.3.0
 [v1.2.1]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.1.3...v1.2.0
 [v1.1.3]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.1.2...v1.1.3
