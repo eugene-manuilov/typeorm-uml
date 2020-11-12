@@ -1,0 +1,12 @@
+{
+	"scripts": {
+		"prebuild": "tsc",
+		"build": "../../bin/run ormconfig.json"
+	},
+	"dependencies": {
+		"mysql": "^2.18.1"
+	},
+	"devDependencies": {
+		"typescript": "^3.9.7"
+	}
+}

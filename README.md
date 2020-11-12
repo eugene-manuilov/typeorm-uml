@@ -1,4 +1,9 @@
-# typeorm-uml 1.2.1
+# typeorm-uml 1.3.0
+
+[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![Version](https://img.shields.io/npm/v/typeorm-uml.svg)](https://www.npmjs.com/package/typeorm-uml)
+[![Downloads/week](https://img.shields.io/npm/dw/typeorm-uml.svg)](https://www.npmjs.com/package/typeorm-uml)
+[![License](https://img.shields.io/npm/l/typeorm-uml.svg)](https://github.com/eugene-manuilov/mynewcli/blob/master/package.json)
 
 A command line tool to generate UML diagrams for Typeorm projects. It uses [plantuml](https://plantuml.com/) to render diagrams and outputs an URL to a diagram.
 
@@ -59,7 +64,7 @@ ts-node ./node_modules/.bin/typeorm-uml ormconfig.json
 typeorm-uml --format=svg --monochrome
 ```
 
-[![typeorm/typescript-example](http://www.plantuml.com/plantuml/png/bP9DIyD048RFpgyOuoMh5edGImXBWrZinKC9ugriibEpD9iDkrj8AFtl9ltGMgZe76SUtcS6PkAyi7wjAu1hIKjL4tgHLnIs38jAE8Sj9Wc6sVtDT9hsnP3pBxHPKJUGISxRv27dK2f9w3nPChvhoEqRIqMLT01kfUf6MA5HczeKfJMwrzar0S3UYeNmz65iXmmtSBNHv4iZjtYtCw6Io6ASlMPX5B6JSIqqnVYMpfzUqdduE1ups7vdDiRv_-LvvQlpm9CfjJx6xFazExSi3kihSelVBndesGNx0Ja6_CHwuqLJS1lWQCGnY8ATu8_eiGameLeEl_09)](http://www.plantuml.com/plantuml/png/bP9DIyD048RFpgyOuoMh5edGImXBWrZinKC9ugriibEpD9iDkrj8AFtl9ltGMgZe76SUtcS6PkAyi7wjAu1hIKjL4tgHLnIs38jAE8Sj9Wc6sVtDT9hsnP3pBxHPKJUGISxRv27dK2f9w3nPChvhoEqRIqMLT01kfUf6MA5HczeKfJMwrzar0S3UYeNmz65iXmmtSBNHv4iZjtYtCw6Io6ASlMPX5B6JSIqqnVYMpfzUqdduE1ups7vdDiRv_-LvvQlpm9CfjJx6xFazExSi3kihSelVBndesGNx0Ja6_CHwuqLJS1lWQCGnY8ATu8_eiGameLeEl_09)
+[![typeorm/typescript-example](http://www.plantuml.com/plantuml/png/XL7DIyCm5B-_l-A9bmOTCc6NKigAEDp5moZYRQJhquOrIKdUeCNkVpVT5rhyo2s_xv2vP-bufsk0gvBUb25ijjH5hS2aIDlahaWl1CkYfe4XmuexR359CCflhnUBB1o1QGfGgPBGCpcot3NaZu0chcpf0VnMcKOwgR4EaOC2hGlS5q9ROpULipeqkXq177jn8vdUhUjGu0SWtXnseYfHnBXypgFfL0JOI4qnlcIhXwTi5TtFPWBsbuZ6UlxR7XvMZ_q1fPPZp1zVyr7O-ZHAaL__l6zGBKSb9-fi-4w7Wb-Jz_raqlU7p7z5vpl0d4mv_F0d)](http://www.plantuml.com/plantuml/png/XL7DIyCm5B-_l-A9bmOTCc6NKigAEDp5moZYRQJhquOrIKdUeCNkVpVT5rhyo2s_xv2vP-bufsk0gvBUb25ijjH5hS2aIDlahaWl1CkYfe4XmuexR359CCflhnUBB1o1QGfGgPBGCpcot3NaZu0chcpf0VnMcKOwgR4EaOC2hGlS5q9ROpULipeqkXq177jn8vdUhUjGu0SWtXnseYfHnBXypgFfL0JOI4qnlcIhXwTi5TtFPWBsbuZ6UlxR7XvMZ_q1fPPZp1zVyr7O-ZHAaL__l6zGBKSb9-fi-4w7Wb-Jz_raqlU7p7z5vpl0d4mv_F0d)
 
 ## Contribute
 

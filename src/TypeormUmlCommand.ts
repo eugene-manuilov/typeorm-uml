@@ -1,4 +1,4 @@
-import { isAbsolute, resolve } from 'path';
+import { isAbsolute, resolve, dirname, basename } from 'path';
 import { createWriteStream, writeFileSync } from 'fs';
 import { get } from 'http';
 
@@ -32,7 +32,7 @@ class TypeormUmlCommand extends Command {
 			char: 'f',
 			description: 'The diagram file format.',
 			default: 'png',
-			options: ['png', 'svg', 'txt', 'puml'],
+			options: [ 'png', 'svg', 'txt', 'puml' ],
 		} ),
 		monochrome: flags.boolean( {
 			description: 'Whether or not to use monochrome colors.',
@@ -56,7 +56,7 @@ class TypeormUmlCommand extends Command {
 
 	/**
 	 * Executes this command.
-	 * 
+	 *
 	 * @async
 	 * @public
 	 */
@@ -95,16 +95,22 @@ class TypeormUmlCommand extends Command {
 	 *
 	 * @async
 	 * @private
-	 * @param {string} configName A path to Typeorm config file.
+	 * @param {string} configPath A path to Typeorm config file.
 	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
 	 * @returns {Connection} A connection instance.
 	 */
-	private async getConnection( configName: string, flags: TypeormUmlCommandFlags ): Promise<Connection> {
-		const connectionOptionsReader = new ConnectionOptionsReader( {
-			root: process.cwd(),
-			configName,
-		} );
+	private async getConnection( configPath: string, flags: TypeormUmlCommandFlags ): Promise<Connection> {
+		let root: string = process.cwd();
+		let configName: string = configPath;
 
+		if ( isAbsolute( configName ) ) {
+			root = dirname( configName );
+			configName = basename( configName );
+
+			process.chdir( root );
+		}
+
+		const connectionOptionsReader = new ConnectionOptionsReader( { root, configName } );
 		const connectionOptions = await connectionOptionsReader.get( flags.connection );
 		return getConnectionManager().create( connectionOptions );
 	}
@@ -129,7 +135,7 @@ class TypeormUmlCommand extends Command {
 
 	/**
 	 * Downloads image into a file.
-	 * 
+	 *
 	 * @private
 	 * @param {string} url The URL to download.
 	 * @param {string} filename The output filename.
@@ -152,7 +158,7 @@ class TypeormUmlCommand extends Command {
 	 * @returns {string} The resolved full path of file.
 	 */
 	private getPath( filename: string ): string {
-		return ! isAbsolute( filename ) ? resolve( process.cwd(), filename ) : filename;
+		return !isAbsolute( filename ) ? resolve( process.cwd(), filename ) : filename;
 	}
 
 }
