@@ -41,6 +41,7 @@ ARGUMENTS
 
 OPTIONS
   -c, --connection=connection    [default: default] The connection name.
+  -d, --direction=direction      [default: TB] Arrows directions. TB=top to bottom, LR=left to right.
   -d, --download=download        The filename where to download the diagram.
   -e, --exclude=exclude          Comma-separated list of entities to exclude from the diagram.
   -f, --format=png|svg|txt|puml  [default: png] The diagram file format.
