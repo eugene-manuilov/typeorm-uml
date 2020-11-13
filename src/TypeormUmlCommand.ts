@@ -28,6 +28,11 @@ class TypeormUmlCommand extends Command {
 			description: 'The connection name.',
 			default: 'default',
 		} ),
+		direction: flags.string( {
+			char: 'd',
+			description: 'Arrows directions. TB=top to bottom, LR=left to right.',
+			default: 'TB',
+		} ),
 		format: flags.string( {
 			char: 'f',
 			description: 'The diagram file format.',

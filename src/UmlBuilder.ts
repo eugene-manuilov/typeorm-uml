@@ -35,6 +35,13 @@ export class UmlBuilder {
 		uml += 'hide stereotypes\n';
 		uml += 'hide methods\n\n';
 
+		const direction = flags.direction.toUpperCase();
+		if ( direction === 'LR' ) {
+			uml += 'left to right direction\n';
+		} else if ( direction === 'TB' ) {
+			uml += 'top to bottom direction\n';
+		}
+
 		uml += 'skinparam linetype ortho\n';
 		if ( flags.monochrome ) {
 			uml += 'skinparam monochrome true\n';

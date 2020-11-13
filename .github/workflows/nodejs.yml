@@ -52,4 +52,4 @@ jobs:
         working-directory: example
         run: test "$(../bin/run)" = "$EXPECTED"
         env:
-          EXPECTED: http://www.plantuml.com/plantuml/png/XP7DQiCm48Jl-nHRUh5eGqaX5sDCJ6beBZa4KteBShHjH6p9I1kmgVFkbVC7DMsYctPclXtOgMVfU5UL07UAFhKXhBVKHet0f4YRvAb8BmBBegHU8SEQMsmmIJ3A7-zdiomyWMaAiD6Aq3CvijpMv8-3YdXZbGVmMsrgwMI5PK3s3hGkQ017EgubqvTrBGhy1iI7GnlK2aMCyqKUZSSYZ8siACRtRFdobYsZvyb4mFw2gAtdw_5GlnpcmvGQZZ5__SW7iDMfb2Q_-hjVxveFbfoaS-2t71RyIzvter7N7PWtJUS_m9ICwk_u0m00
+          EXPECTED: http://www.plantuml.com/plantuml/png/XP71QiCm44Jl-nLRUh5eGqaX5sDCJ6XeBZq4KteBShHDH6p9I5kmgVFlbTqaKDEqkcbdtym8pJrBnnzL2N2Zw5qRmlf0RTG8J8gqIHwAz2AmB4hg5JAikSK6amIZ_FvskSp24PYc07kj23sJ8yjjJVvxK17lhV80R6jaYuLbjXKgxMZBsXhm1srgwMI5POZgIRGkC84OKd4hcNRMjIZm4n3lXfQe5OeOLozvD9sAC3QoeXXVi_NYELj7ZxEPWEF5ehQU_yR3iyen7wRKS8pvqri-CjkSIcdocz_xzLkhKSX9EWC_vH1mrVdOJIPTDtZ-ktI-0yp9gFv_lm00
