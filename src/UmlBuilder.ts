@@ -113,6 +113,7 @@ export class UmlBuilder {
 	protected buildColumn( column: ColumnMetadata, entity: EntityMetadata, connection: Connection ): string {
 		let columnName = column.databaseName;
 		let prefix = '';
+		let suffix = '';
 
 		if ( column.isPrimary ) {
 			prefix = '+';
@@ -122,6 +123,10 @@ export class UmlBuilder {
 			if ( index ) {
 				prefix = index.isUnique ? '~' : '#';
 			}
+		}
+
+		if ( column.referencedColumn ) {
+			suffix = '<<FK>>';
 		}
 
 		let length = this.getColumnLength( column );
@@ -135,7 +140,7 @@ export class UmlBuilder {
 			length = `(${ length })`;
 		}
 
-		return `  ${ prefix }${ columnName }: ${ type.toUpperCase() }${ length }\n`;
+		return `  ${ prefix }${ columnName }: ${ type.toUpperCase() }${ length } ${ suffix }\n`;
 	}
 
 	/**

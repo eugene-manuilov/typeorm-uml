@@ -2,6 +2,7 @@
 
 ## [Unreleased] - TBD
 - Added `--direction` flag to define a diagram direction: "top to bottom" or "left to right".
+- Added `<<FK>>` suffix to foreign key columns.
 - Fixed the current working directory issue.
 
 ## [v1.3.0] (2020-11-12)
