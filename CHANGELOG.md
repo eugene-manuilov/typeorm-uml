@@ -1,7 +1,7 @@
 # Changelog
 
 ## [Unreleased] - TBD
-- 
+- Fixed the current working directory issue.
 
 ## [v1.3.0] (2020-11-12)
 - Added an example with a shopping cart database.
