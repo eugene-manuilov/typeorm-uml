@@ -49,7 +49,7 @@ export class UmlBuilder {
 		uml += 'skinparam roundcorner 5\n';
 		uml += 'skinparam linetype ortho\n';
 		uml += 'skinparam shadowing false\n';
-		uml += 'skinparam handwritten false\n';
+		uml += `skinparam handwritten ${ flags.handwritten ? 'true' : 'false' }\n`;
 		if ( flags.monochrome ) {
 			uml += 'skinparam monochrome true\n';
 		} else {

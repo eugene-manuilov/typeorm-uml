@@ -46,6 +46,7 @@ OPTIONS
   -e, --exclude=exclude          Comma-separated list of entities to exclude from the diagram.
   -f, --format=png|svg|txt|puml  [default: png] The diagram file format.
   -i, --include=include          Comma-separated list of entities to include into the diagram.
+  --handwritten                  Whether or not to use handwritten mode.
   --monochrome                   Whether or not to use monochrome colors.
 ```
 

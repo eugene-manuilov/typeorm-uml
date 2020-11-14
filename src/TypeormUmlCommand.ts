@@ -43,6 +43,10 @@ class TypeormUmlCommand extends Command {
 			description: 'Whether or not to use monochrome colors.',
 			default: false,
 		} ),
+		handwritten: flags.boolean( {
+			description: 'Whether or not to use handwritten mode.',
+			default: false,
+		} ),
 		download: flags.string( {
 			char: 'd',
 			description: 'The filename where to download the diagram.',
