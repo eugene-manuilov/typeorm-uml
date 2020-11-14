@@ -27,10 +27,14 @@ export class UmlBuilder {
 
 		if ( flags.format === 'txt' ) {
 			uml += '!define pkey(x) x\n';
+			uml += '!define fkey(x) x\n';
+			uml += '!define column(x) x\n';
 		} else {
-			uml += '!define pkey(x) <b>x</b>\n';
+			uml += '!define pkey(x) <b><color:DarkGoldenRod><&key></color> x</b>\n';
+			uml += '!define fkey(x) <color:#AAAAAA><&key></color> x\n';
+			uml += '!define column(x) <color:#EFEFEF><&media-record></color> x\n';
 		}
-		uml += '!define table(x) entity x << (T,#FFAAAA) >>\n\n';
+		uml += `!define table(x) entity x << (T,${ flags.monochrome ? '#FFAAAA' : 'white' }) >>\n\n`;
 
 		uml += 'hide stereotypes\n';
 		uml += 'hide methods\n\n';
@@ -42,9 +46,18 @@ export class UmlBuilder {
 			uml += 'top to bottom direction\n';
 		}
 
+		uml += 'skinparam roundcorner 5\n';
 		uml += 'skinparam linetype ortho\n';
+		uml += 'skinparam shadowing false\n';
+		uml += 'skinparam handwritten false\n';
 		if ( flags.monochrome ) {
 			uml += 'skinparam monochrome true\n';
+		} else {
+			uml += 'skinparam class {\n';
+			uml += '    BackgroundColor white\n';
+			uml += '    ArrowColor seagreen\n';
+			uml += '    BorderColor seagreen\n';
+			uml += '}\n';
 		}
 
 		const exclude = ( flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
@@ -111,22 +124,16 @@ export class UmlBuilder {
 	 * @returns {string} An uml column string.
 	 */
 	protected buildColumn( column: ColumnMetadata, entity: EntityMetadata, connection: Connection ): string {
-		let columnName = column.databaseName;
-		let prefix = '';
+		let columnName = '';
 		let suffix = '';
 
 		if ( column.isPrimary ) {
-			prefix = '+';
-			columnName = `pkey( ${ columnName } )`;
-		} else if ( Array.isArray( entity.indices ) && entity.indices.length > 0 ) {
-			const index = entity.indices.find( ( idx ) => idx.columns.map( column => column.databaseName ).includes( column.databaseName ) );
-			if ( index ) {
-				prefix = index.isUnique ? '~' : '#';
-			}
-		}
-
-		if ( column.referencedColumn ) {
-			suffix = '<<FK>>';
+			columnName = `pkey( ${ column.databaseName } )`;
+		} else if ( column.referencedColumn ) {
+			suffix += '<<FK>>';
+			columnName = `fkey( ${ column.databaseName } )`;
+		} else {
+			columnName = `column( ${ column.databaseName } )`;
 		}
 
 		let length = this.getColumnLength( column );
@@ -140,7 +147,7 @@ export class UmlBuilder {
 			length = `(${ length })`;
 		}
 
-		return `  ${ prefix }${ columnName }: ${ type.toUpperCase() }${ length } ${ suffix }\n`;
+		return `  ${ columnName }: ${ type.toUpperCase() }${ length } ${ suffix }\n`;
 	}
 
 	/**
