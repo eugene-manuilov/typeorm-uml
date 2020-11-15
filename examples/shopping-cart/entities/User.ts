@@ -12,9 +12,9 @@ import { Product } from './Product';
 import { Transaction } from './Transaction';
 
 export enum UserRole {
-	ADMIN = "admin",
-	EDITOR = "editor",
-	GHOST = "ghost"
+	ADMIN = 'admin',
+	EDITOR = 'editor',
+	GHOST = 'ghost'
 }
 
 @Index( 'uq_mobile', [ 'mobile' ], { unique: true } )
@@ -25,11 +25,11 @@ export class User {
 	@PrimaryGeneratedColumn( { type: 'bigint', name: 'id' } )
 	id: string;
 
-	@Column({
-		type: "enum",
+	@Column( {
+		type: 'enum',
 		enum: UserRole,
-		default: UserRole.GHOST
-	})
+		default: UserRole.GHOST,
+	} )
 	role: UserRole
 
 	@Column( 'varchar', { name: 'firstName', nullable: true, length: 50 } )

@@ -50,6 +50,9 @@ class TypeormUmlCommand extends Command {
 			char: 'i',
 			description: 'Comma-separated list of entities to include into the diagram.',
 		} ),
+		'with-enum-values': flags.boolean( {
+			description: 'Show possible values for enum type field',
+		} ),
 	};
 
 	protected readonly builder = new UmlBuilder();
