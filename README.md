@@ -1,4 +1,4 @@
-# typeorm-uml 1.3.0
+# typeorm-uml 1.4.0
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/typeorm-uml.svg)](https://www.npmjs.com/package/typeorm-uml)
@@ -48,6 +48,7 @@ OPTIONS
   -i, --include=include          Comma-separated list of entities to include into the diagram.
   --handwritten                  Whether or not to use handwritten mode.
   --monochrome                   Whether or not to use monochrome colors.
+  --with-enum-values             Show possible values for enum type field.
 ```
 
 ## Typescript

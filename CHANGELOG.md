@@ -1,6 +1,10 @@
 # Changelog
 
 ## [Unreleased] - TBD
+
+- 
+
+## [v1.4.0] (2020-11-16)
 - Added `--direction` flag to define a diagram direction: "top to bottom" or "left to right".
 - Added `--handwritten` flag to enable handwritten mode.
 - Added `--with-enum-values` flag to show enum values
