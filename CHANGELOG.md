@@ -3,8 +3,9 @@
 ## [Unreleased] - TBD
 - Added `--direction` flag to define a diagram direction: "top to bottom" or "left to right".
 - Added `--handwritten` flag to enable handwritten mode.
+- Added `--with-enum-values` flag to show enum values
 - Added `<<FK>>` suffix to foreign key columns.
-- Reworked the default color schema.
+- Updated the default color schema and column icons.
 - Fixed the current working directory issue.
 
 ## [v1.3.0] (2020-11-12)

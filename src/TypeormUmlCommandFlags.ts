@@ -6,5 +6,5 @@ export interface TypeormUmlCommandFlags {
 	direction?: string,
 	include?: string,
 	exclude?: string,
-	['with-enum-values']?: boolean
+	['with-enum-values']?: boolean,
 }

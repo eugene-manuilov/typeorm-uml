@@ -60,11 +60,10 @@ class TypeormUmlCommand extends Command {
 			description: 'Comma-separated list of entities to include into the diagram.',
 		} ),
 		'with-enum-values': flags.boolean( {
-			description: 'Show possible values for enum type field',
+			description: 'Show possible values for enum type field.',
+			default: false,
 		} ),
 	};
-
-	protected readonly builder = new UmlBuilder();
 
 	/**
 	 * Executes this command.
@@ -75,9 +74,11 @@ class TypeormUmlCommand extends Command {
 	public async run(): Promise<any> {
 		try {
 			const { args, flags } = this.parse( TypeormUmlCommand );
-
 			const connection = await this.getConnection( args.configName, flags );
-			const uml = this.builder.buildUml( connection, flags );
+
+			const builder = new UmlBuilder( connection, flags );
+			const uml = builder.buildUml();
+
 			if ( connection.isConnected ) {
 				await connection.close();
 			}
