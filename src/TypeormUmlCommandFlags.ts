@@ -4,4 +4,5 @@ export interface TypeormUmlCommandFlags {
 	connection?: string,
 	include?: string,
 	exclude?: string,
+	['with-enum-values']?: boolean
 }
