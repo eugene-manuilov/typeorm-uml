@@ -1,9 +1,9 @@
-# typeorm-uml 1.3.0
+# typeorm-uml 1.4.0
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/typeorm-uml.svg)](https://www.npmjs.com/package/typeorm-uml)
 [![Downloads/week](https://img.shields.io/npm/dw/typeorm-uml.svg)](https://www.npmjs.com/package/typeorm-uml)
-[![License](https://img.shields.io/npm/l/typeorm-uml.svg)](https://github.com/eugene-manuilov/mynewcli/blob/master/package.json)
+[![License](https://img.shields.io/npm/l/typeorm-uml.svg)](https://github.com/eugene-manuilov/typeorm-uml/blob/master/package.json)
 
 A command line tool to generate UML diagrams for Typeorm projects. It uses [plantuml](https://plantuml.com/) to render diagrams and outputs an URL to a diagram.
 
@@ -41,11 +41,14 @@ ARGUMENTS
 
 OPTIONS
   -c, --connection=connection    [default: default] The connection name.
+  -d, --direction=direction      [default: TB] Arrows directions. TB=top to bottom, LR=left to right.
   -d, --download=download        The filename where to download the diagram.
   -e, --exclude=exclude          Comma-separated list of entities to exclude from the diagram.
   -f, --format=png|svg|txt|puml  [default: png] The diagram file format.
   -i, --include=include          Comma-separated list of entities to include into the diagram.
+  --handwritten                  Whether or not to use handwritten mode.
   --monochrome                   Whether or not to use monochrome colors.
+  --with-enum-values             Show possible values for enum type field.
 ```
 
 ## Typescript
@@ -61,10 +64,10 @@ ts-node ./node_modules/.bin/typeorm-uml ormconfig.json
 [**typeorm/typescript-example**](https://github.com/typeorm/typescript-example)
 
 ```sh-session
-typeorm-uml --format=svg --monochrome
+typeorm-uml --format=svg
 ```
 
-[![typeorm/typescript-example](http://www.plantuml.com/plantuml/png/XL7DIyCm5B-_l-A9bmOTCc6NKigAEDp5moZYRQJhquOrIKdUeCNkVpVT5rhyo2s_xv2vP-bufsk0gvBUb25ijjH5hS2aIDlahaWl1CkYfe4XmuexR359CCflhnUBB1o1QGfGgPBGCpcot3NaZu0chcpf0VnMcKOwgR4EaOC2hGlS5q9ROpULipeqkXq177jn8vdUhUjGu0SWtXnseYfHnBXypgFfL0JOI4qnlcIhXwTi5TtFPWBsbuZ6UlxR7XvMZ_q1fPPZp1zVyr7O-ZHAaL__l6zGBKSb9-fi-4w7Wb-Jz_raqlU7p7z5vpl0d4mv_F0d)](http://www.plantuml.com/plantuml/png/XL7DIyCm5B-_l-A9bmOTCc6NKigAEDp5moZYRQJhquOrIKdUeCNkVpVT5rhyo2s_xv2vP-bufsk0gvBUb25ijjH5hS2aIDlahaWl1CkYfe4XmuexR359CCflhnUBB1o1QGfGgPBGCpcot3NaZu0chcpf0VnMcKOwgR4EaOC2hGlS5q9ROpULipeqkXq177jn8vdUhUjGu0SWtXnseYfHnBXypgFfL0JOI4qnlcIhXwTi5TtFPWBsbuZ6UlxR7XvMZ_q1fPPZp1zVyr7O-ZHAaL__l6zGBKSb9-fi-4w7Wb-Jz_raqlU7p7z5vpl0d4mv_F0d)
+[![typeorm/typescript-example](http://www.plantuml.com/plantuml/svg/ZLFTIyCm47_FNt4Yo0gEeR0NAMLppeyN7yOGtoHjRcjecol9ZMqu_tVJrCqo9veyzNvVTpawSYmjhwfIY3E52sqGwWAtlKq4SPh46PLaR-waBHweL6Xcf9BumXEIU12m13Rn84qEuiLUt2hFn-7yq1pulh2gJ5SnlM-kLrIejEnRpCYgKrAMQOcD4Wrhti86uXXwyyjrhXaZI18XSgqG7AD5ucsDhYrKo3af9mHJ3KoG4ZDLeBJFOar6k4ARMbfPWQMLKRu1WnQ6dNhf6sWSWQptwW0kbuhMsYnX8Kk77IINHgsjPaRp0yjAwHoy2_3dLcR5CkHEceaXZ1EGiRMqReiEvT8YcbRX7mZj4V3XnmiF19baN9BTGXGImdf1AuXkuEbvthkwYi2NlnO1HbROG2_ZsUHnFEjT3uSU_tQhoV7_dFnIoXDM7G9kkC7dqzVvSSJRLzSQtTl90HhIqt5q2-tvHx0F-DNvOzVlxtR1z4_I_bk84HhL_3gV)](http://www.plantuml.com/plantuml/svg/ZLFTIyCm47_FNt4Yo0gEeR0NAMLppeyN7yOGtoHjRcjecol9ZMqu_tVJrCqo9veyzNvVTpawSYmjhwfIY3E52sqGwWAtlKq4SPh46PLaR-waBHweL6Xcf9BumXEIU12m13Rn84qEuiLUt2hFn-7yq1pulh2gJ5SnlM-kLrIejEnRpCYgKrAMQOcD4Wrhti86uXXwyyjrhXaZI18XSgqG7AD5ucsDhYrKo3af9mHJ3KoG4ZDLeBJFOar6k4ARMbfPWQMLKRu1WnQ6dNhf6sWSWQptwW0kbuhMsYnX8Kk77IINHgsjPaRp0yjAwHoy2_3dLcR5CkHEceaXZ1EGiRMqReiEvT8YcbRX7mZj4V3XnmiF19baN9BTGXGImdf1AuXkuEbvthkwYi2NlnO1HbROG2_ZsUHnFEjT3uSU_tQhoV7_dFnIoXDM7G9kkC7dqzVvSSJRLzSQtTl90HhIqt5q2-tvHx0F-DNvOzVlxtR1z4_I_bk84HhL_3gV)
 
 ## Contribute
 

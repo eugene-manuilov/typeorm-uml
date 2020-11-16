@@ -28,6 +28,11 @@ class TypeormUmlCommand extends Command {
 			description: 'The connection name.',
 			default: 'default',
 		} ),
+		direction: flags.string( {
+			char: 'd',
+			description: 'Arrows directions. TB=top to bottom, LR=left to right.',
+			default: 'TB',
+		} ),
 		format: flags.string( {
 			char: 'f',
 			description: 'The diagram file format.',
@@ -36,6 +41,10 @@ class TypeormUmlCommand extends Command {
 		} ),
 		monochrome: flags.boolean( {
 			description: 'Whether or not to use monochrome colors.',
+			default: false,
+		} ),
+		handwritten: flags.boolean( {
+			description: 'Whether or not to use handwritten mode.',
 			default: false,
 		} ),
 		download: flags.string( {
@@ -51,11 +60,10 @@ class TypeormUmlCommand extends Command {
 			description: 'Comma-separated list of entities to include into the diagram.',
 		} ),
 		'with-enum-values': flags.boolean( {
-			description: 'Show possible values for enum type field',
+			description: 'Show possible values for enum type field.',
+			default: false,
 		} ),
 	};
-
-	protected readonly builder = new UmlBuilder();
 
 	/**
 	 * Executes this command.
@@ -66,9 +74,11 @@ class TypeormUmlCommand extends Command {
 	public async run(): Promise<any> {
 		try {
 			const { args, flags } = this.parse( TypeormUmlCommand );
-
 			const connection = await this.getConnection( args.configName, flags );
-			const uml = this.builder.buildUml( connection, flags );
+
+			const builder = new UmlBuilder( connection, flags );
+			const uml = builder.buildUml();
+
 			if ( connection.isConnected ) {
 				await connection.close();
 			}
@@ -103,15 +113,16 @@ class TypeormUmlCommand extends Command {
 	 * @returns {Connection} A connection instance.
 	 */
 	private async getConnection( configPath: string, flags: TypeormUmlCommandFlags ): Promise<Connection> {
-		let root: string = process.cwd();
-		let configName: string = configPath;
+		let root = process.cwd();
+		let configName = configPath;
 
 		if ( isAbsolute( configName ) ) {
 			root = dirname( configName );
 			configName = basename( configName );
-
-			process.chdir( root );
 		}
+
+		const cwd = dirname( resolve( root, configName ) );
+		process.chdir( cwd );
 
 		const connectionOptionsReader = new ConnectionOptionsReader( { root, configName } );
 		const connectionOptions = await connectionOptionsReader.get( flags.connection );

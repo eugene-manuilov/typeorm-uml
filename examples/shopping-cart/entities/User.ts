@@ -30,7 +30,7 @@ export class User {
 		enum: UserRole,
 		default: UserRole.GHOST,
 	} )
-	role: UserRole
+	role: UserRole;
 
 	@Column( 'varchar', { name: 'firstName', nullable: true, length: 50 } )
 	firstName: string | null;

@@ -14,39 +14,67 @@ interface ColumnDataTypeDefaults {
 
 export class UmlBuilder {
 
-	protected flags: TypeormUmlCommandFlags;
 	/**
-	 * Builds database UML and returns it.
+	 * Constructor.
 	 *
 	 * @public
 	 * @param {Connection} connection A database connection.
 	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
+	 */
+	public constructor(
+		protected readonly connection: Connection,
+		protected readonly flags: TypeormUmlCommandFlags
+	) {}
+
+	/**
+	 * Builds database UML and returns it.
+	 *
+	 * @public
 	 * @returns {string} An uml string.
 	 */
-	public buildUml( connection: Connection, flags: TypeormUmlCommandFlags ): string {
-		this.flags = flags;
+	public buildUml(): string {
 		let uml = '@startuml\n\n';
 
-		if ( flags.format === 'txt' ) {
+		if ( this.flags.format === 'txt' ) {
 			uml += '!define pkey(x) x\n';
+			uml += '!define fkey(x) x\n';
+			uml += '!define column(x) x\n';
 		} else {
-			uml += '!define pkey(x) <b>x</b>\n';
+			uml += '!define pkey(x) <b><color:DarkGoldenRod><&key></color> x</b>\n';
+			uml += '!define fkey(x) <color:#AAAAAA><&key></color> x\n';
+			uml += '!define column(x) <color:#EFEFEF><&media-record></color> x\n';
 		}
-		uml += '!define table(x) entity x << (T,#FFAAAA) >>\n\n';
+		uml += `!define table(x) entity x << (T,${ this.flags.monochrome ? '#FFAAAA' : 'white' }) >>\n\n`;
 
 		uml += 'hide stereotypes\n';
 		uml += 'hide methods\n\n';
 
-		uml += 'skinparam linetype ortho\n';
-		if ( flags.monochrome ) {
-			uml += 'skinparam monochrome true\n';
+		const direction = this.flags.direction.toUpperCase();
+		if ( direction === 'LR' ) {
+			uml += 'left to right direction\n';
+		} else if ( direction === 'TB' ) {
+			uml += 'top to bottom direction\n';
 		}
 
-		const exclude = ( flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
-		const include = ( flags.include || '' ).split( ',' ).filter( ( item ) => item.trim().length );
+		uml += 'skinparam roundcorner 5\n';
+		uml += 'skinparam linetype ortho\n';
+		uml += 'skinparam shadowing false\n';
+		uml += `skinparam handwritten ${ this.flags.handwritten ? 'true' : 'false' }\n`;
+		if ( this.flags.monochrome ) {
+			uml += 'skinparam monochrome true\n';
+		} else {
+			uml += 'skinparam class {\n';
+			uml += '    BackgroundColor white\n';
+			uml += '    ArrowColor seagreen\n';
+			uml += '    BorderColor seagreen\n';
+			uml += '}\n';
+		}
 
-		const connectionMetadataBuilder = new ConnectionMetadataBuilder( connection );
-		const entityMetadatas = connectionMetadataBuilder.buildEntityMetadatas( connection.options.entities || [] );
+		const exclude = ( this.flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
+		const include = ( this.flags.include || '' ).split( ',' ).filter( ( item ) => item.trim().length );
+
+		const connectionMetadataBuilder = new ConnectionMetadataBuilder( this.connection );
+		const entityMetadatas = connectionMetadataBuilder.buildEntityMetadatas( this.connection.options.entities || [] );
 		if ( !entityMetadatas.length ) {
 			throw new Error( 'No entities have been found. Please, check your typeorm config to make sure you have configured it correctly.' );
 		}
@@ -63,7 +91,10 @@ export class UmlBuilder {
 				continue;
 			}
 
-			uml += this.buildClass( entity, connection );
+			uml += `\ntable( ${ entity.tableNameWithoutPrefix } ) {\n${
+				entity.columns.map( this.buildColumn, this ).join( '' )
+			}}\n`;
+
 			foreignKeys += this.buildForeignKeys( entity );
 		}
 
@@ -77,60 +108,37 @@ export class UmlBuilder {
 	}
 
 	/**
-	 * Builds an UML class for an entity and returns it.
-	 *
-	 * @protected
-	 * @param {EntityMetadata} entity An entity metadata.
-	 * @param {Connection} connection A database connection.
-	 * @returns {string} An uml class string.
-	 */
-	protected buildClass( entity: EntityMetadata, connection: Connection ): string {
-		let uml = `\ntable( ${ entity.tableNameWithoutPrefix } ) {\n`;
-
-		for ( let i = 0, len = entity.columns.length; i < len; i++ ) {
-			uml += this.buildColumn( entity.columns[i], entity, connection );
-		}
-
-		uml += '}\n';
-
-		return uml;
-	}
-
-	/**
 	 * Builds an UML column and returns it.
 	 *
 	 * @protected
 	 * @param {ColumnMetadata} column A column metadata.
-	 * @param {EntityMetadata} entity An entity metadata.
-	 * @param {Connection} connection A database connection.
 	 * @returns {string} An uml column string.
 	 */
-	protected buildColumn( column: ColumnMetadata, entity: EntityMetadata, connection: Connection ): string {
-		let columnName = column.databaseName;
-		let prefix = '';
+	protected buildColumn( column: ColumnMetadata ): string {
+		let columnName = '';
+		let suffix = '';
 
 		if ( column.isPrimary ) {
-			prefix = '+';
-			columnName = `pkey( ${ columnName } )`;
-		} else if ( Array.isArray( entity.indices ) && entity.indices.length > 0 ) {
-			const index = entity.indices.find( ( idx ) => idx.columns.map( column => column.databaseName ).includes( column.databaseName ) );
-			if ( index ) {
-				prefix = index.isUnique ? '~' : '#';
-			}
+			columnName = `pkey( ${ column.databaseName } )`;
+		} else if ( column.referencedColumn ) {
+			suffix += '<<FK>>';
+			columnName = `fkey( ${ column.databaseName } )`;
+		} else {
+			columnName = `column( ${ column.databaseName } )`;
 		}
 
 		let length = this.getColumnLength( column );
-		const type = connection.driver.normalizeType( column );
+		const type = this.connection.driver.normalizeType( column );
 
-		if ( !length && connection.driver.dataTypeDefaults[type] ) {
-			length = this.getColumnLength( ( connection.driver.dataTypeDefaults[type] as unknown ) as ColumnDataTypeDefaults );
+		if ( !length && this.connection.driver.dataTypeDefaults[type] ) {
+			length = this.getColumnLength( ( this.connection.driver.dataTypeDefaults[type] as unknown ) as ColumnDataTypeDefaults );
 		}
 
 		if ( length ) {
 			length = `(${ length })`;
 		}
 
-		return `  ${ prefix }${ columnName }: ${ type.toUpperCase() }${ length }\n`;
+		return `  ${ columnName }: ${ type.toUpperCase() }${ length } ${ suffix }\n`;
 	}
 
 	/**
@@ -191,8 +199,8 @@ export class UmlBuilder {
 			return column.precision.toString();
 		}
 
-		if ( ( column as ColumnMetadata ).enum && this.flags['with-enum-values'] ) {
-			return ( column as ColumnMetadata ).enum.join( ',' );
+		if ( this.flags['with-enum-values'] && ( column as ColumnMetadata ).enum ) {
+			return ( column as ColumnMetadata ).enum.join( ', ' );
 		}
 
 		return '';
