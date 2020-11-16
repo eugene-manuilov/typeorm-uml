@@ -91,7 +91,10 @@ export class UmlBuilder {
 				continue;
 			}
 
-			uml += this.buildClass( entity );
+			uml += `\ntable( ${ entity.tableNameWithoutPrefix } ) {\n${
+				entity.columns.map( this.buildColumn, this ).join( '' )
+			}}\n`;
+
 			foreignKeys += this.buildForeignKeys( entity );
 		}
 
@@ -100,25 +103,6 @@ export class UmlBuilder {
 		}
 
 		uml += '@enduml\n';
-
-		return uml;
-	}
-
-	/**
-	 * Builds an UML class for an entity and returns it.
-	 *
-	 * @protected
-	 * @param {EntityMetadata} entity An entity metadata.
-	 * @returns {string} An uml class string.
-	 */
-	protected buildClass( entity: EntityMetadata ): string {
-		let uml = `\ntable( ${ entity.tableNameWithoutPrefix } ) {\n`;
-
-		for ( let i = 0, len = entity.columns.length; i < len; i++ ) {
-			uml += this.buildColumn( entity.columns[i] );
-		}
-
-		uml += '}\n';
 
 		return uml;
 	}
