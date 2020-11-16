@@ -14,6 +14,7 @@ interface ColumnDataTypeDefaults {
 
 export class UmlBuilder {
 
+	protected flags: TypeormUmlCommandFlags;
 	/**
 	 * Builds database UML and returns it.
 	 *
@@ -23,6 +24,7 @@ export class UmlBuilder {
 	 * @returns {string} An uml string.
 	 */
 	public buildUml( connection: Connection, flags: TypeormUmlCommandFlags ): string {
+		this.flags = flags;
 		let uml = '@startuml\n\n';
 
 		if ( flags.format === 'txt' ) {
@@ -206,6 +208,10 @@ export class UmlBuilder {
 			}
 
 			return column.precision.toString();
+		}
+
+		if ( ( column as ColumnMetadata ).enum && this.flags['with-enum-values'] ) {
+			return ( column as ColumnMetadata ).enum.join( ',' );
 		}
 
 		return '';
