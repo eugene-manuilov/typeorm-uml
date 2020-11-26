@@ -29,7 +29,7 @@ class TypeormUmlCommand extends Command {
 			default: 'default',
 		} ),
 		direction: flags.string( {
-			char: 'd',
+			char: 'D',
 			description: 'Arrows directions. TB=top to bottom, LR=left to right.',
 			default: 'TB',
 		} ),
