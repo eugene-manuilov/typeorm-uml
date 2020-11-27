@@ -2,7 +2,8 @@
 
 ## [Unreleased] - TBD
 
-- 
+- Updated dependencies to the latest versions.
+- Renamed short option name for the `--direction` flag to be `D` instead of `d`.
 
 ## [v1.4.0] (2020-11-16)
 - Added `--direction` flag to define a diagram direction: "top to bottom" or "left to right".
