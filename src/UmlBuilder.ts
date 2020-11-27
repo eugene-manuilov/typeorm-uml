@@ -130,7 +130,7 @@ export class UmlBuilder {
 		let length = this.getColumnLength( column );
 		const type = this.connection.driver.normalizeType( column );
 
-		if ( !length && this.connection.driver.dataTypeDefaults[type] ) {
+		if ( !length && this.connection.driver.dataTypeDefaults && this.connection.driver.dataTypeDefaults[type] ) {
 			length = this.getColumnLength( ( this.connection.driver.dataTypeDefaults[type] as unknown ) as ColumnDataTypeDefaults );
 		}
 
