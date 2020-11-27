@@ -1,4 +1,5 @@
 export interface TypeormUmlCommandFlags {
+	download?: string;
 	format?: string,
 	monochrome?: boolean,
 	handwritten?: boolean,

@@ -7,7 +7,7 @@ exports.env = {
 exports.parser = '@typescript-eslint/parser';
 exports.parserOptions = {
 	ecmaVersion: 11,
-	sourceType: 'module'
+	sourceType: 'module',
 };
 
 exports.extends = [
@@ -22,13 +22,13 @@ exports.rules = {
 	'@typescript-eslint/no-unused-vars': [ 'error' ],
 	'array-bracket-spacing': [ 'error', 'always' ],
 	'comma-dangle': [ 'error', { arrays: 'always-multiline', objects: 'always-multiline' } ],
-	'indent': [ 'error', 'tab', { SwitchCase: 1 } ],
+	indent: [ 'error', 'tab', { SwitchCase: 1 } ],
 	'no-console': 'error',
 	'no-tabs': 'off',
 	'no-unused-vars': 'off',
 	'no-useless-constructor': 'off',
 	'padded-blocks': [ 'error', { classes: 'always' } ],
-	'semi': [ 'error', 'always' ],
+	semi: [ 'error', 'always' ],
 	'space-before-function-paren': [ 'error', { named: 'never' } ],
 	'space-in-parens': [ 'error', 'always' ],
 	'template-curly-spacing': [ 'error', 'always' ],

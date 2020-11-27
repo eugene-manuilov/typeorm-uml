@@ -1,12 +1,7 @@
-import { isAbsolute, resolve, dirname, basename } from 'path';
-import { createWriteStream, writeFileSync } from 'fs';
-import { get } from 'http';
-
 import { Command, flags } from '@oclif/command';
-import * as plantumlEncoder from 'plantuml-encoder';
-import { ConnectionOptionsReader, getConnectionManager, Connection } from 'typeorm';
+import { Connection } from 'typeorm';
+import { runCli, getConnection, getUrl, download, getPath } from './TypeormUml';
 
-import { UmlBuilder } from './UmlBuilder';
 import { TypeormUmlCommandFlags } from './TypeormUmlCommandFlags';
 
 class TypeormUmlCommand extends Command {
@@ -72,35 +67,8 @@ class TypeormUmlCommand extends Command {
 	 * @public
 	 */
 	public async run(): Promise<any> {
-		try {
-			const { args, flags } = this.parse( TypeormUmlCommand );
-			const connection = await this.getConnection( args.configName, flags );
-
-			const builder = new UmlBuilder( connection, flags );
-			const uml = builder.buildUml();
-
-			if ( connection.isConnected ) {
-				await connection.close();
-			}
-
-			if ( flags.format === 'puml' ) {
-				if ( flags.download ) {
-					const path = this.getPath( flags.download );
-					writeFileSync( path, uml );
-				} else {
-					process.stdout.write( `${ uml }\n` );
-				}
-			} else {
-				const url = await this.getUrl( uml, flags );
-				if ( flags.download ) {
-					await this.download( url, flags.download );
-				} else {
-					process.stdout.write( `${ url }\n` );
-				}
-			}
-		} catch ( e ) {
-			this.error( e.message );
-		}
+		const { args, flags } = this.parse( TypeormUmlCommand );
+		await runCli.call( this, args.configName, flags );
 	}
 
 	/**
@@ -113,20 +81,7 @@ class TypeormUmlCommand extends Command {
 	 * @returns {Connection} A connection instance.
 	 */
 	private async getConnection( configPath: string, flags: TypeormUmlCommandFlags ): Promise<Connection> {
-		let root = process.cwd();
-		let configName = configPath;
-
-		if ( isAbsolute( configName ) ) {
-			root = dirname( configName );
-			configName = basename( configName );
-		}
-
-		const cwd = dirname( resolve( root, configName ) );
-		process.chdir( cwd );
-
-		const connectionOptionsReader = new ConnectionOptionsReader( { root, configName } );
-		const connectionOptions = await connectionOptionsReader.get( flags.connection );
-		return getConnectionManager().create( connectionOptions );
+		return getConnection( configPath, flags );
 	}
 
 	/**
@@ -139,12 +94,7 @@ class TypeormUmlCommand extends Command {
 	 * @returns {string} A plantuml string.
 	 */
 	private async getUrl( uml: string, flags: TypeormUmlCommandFlags ): Promise<string> {
-		const encodedUml = plantumlEncoder.encode( uml );
-
-		const format = encodeURIComponent( flags.format );
-		const schema = encodeURIComponent( encodedUml );
-
-		return `http://www.plantuml.com/plantuml/${ format }/${ schema }`;
+		return getUrl( uml, flags );
 	}
 
 	/**
@@ -156,12 +106,7 @@ class TypeormUmlCommand extends Command {
 	 * @returns {Promise} A promise object.
 	 */
 	private download( url: string, filename: string ): Promise<void> {
-		return new Promise( ( resolve ) => {
-			get( url, ( response ) => {
-				response.pipe( createWriteStream( this.getPath( filename ) ) );
-				response.on( 'end', resolve );
-			} );
-		} );
+		return download( url, filename );
 	}
 
 	/**
@@ -172,7 +117,7 @@ class TypeormUmlCommand extends Command {
 	 * @returns {string} The resolved full path of file.
 	 */
 	private getPath( filename: string ): string {
-		return !isAbsolute( filename ) ? resolve( process.cwd(), filename ) : filename;
+		return getPath( filename );
 	}
 
 }
