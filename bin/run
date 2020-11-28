@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-require( '../lib/TypeormUmlCommand' )
+require( '../lib/typeorm-uml-command.class' )
 	.run()
 	.catch( require( '@oclif/errors/handle' ) );

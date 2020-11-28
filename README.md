@@ -59,6 +59,29 @@ If you use `.ts` entities in your Typeorm config, then run this command with `ts
 ts-node ./node_modules/.bin/typeorm-uml ormconfig.json
 ```
 
+## Run Programmatically
+
+You can also import the `TypeormUml` class from this package and build UML diagrams in your code. See this small example:
+
+```typescript
+import { EOL } from 'os';
+import { join } from 'path';
+
+import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
+
+const configPath = join( __dirname, 'path/to/ormconfig.json' );
+const flags: Flags = {
+	direction: Direction.LR,
+	format: Format.SVG,
+	handwritten: true,
+};
+
+const typeormUml = new TypeormUml();
+typeormUml.build( configPath, flags ).then( ( url ) => {
+	process.stdout.write( 'Diagram URL: ' + url + EOL );
+} );
+```
+
 ## Example
 
 [**typeorm/typescript-example**](https://github.com/typeorm/typescript-example)

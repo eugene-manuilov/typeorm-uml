@@ -5,6 +5,7 @@
 - Added .eslintignore file.
 - Updated dependencies to the latest versions.
 - Renamed short option name for the `--direction` flag to be `D` instead of `d`.
+- Reworked the code base to export builder and allow run it programmatically.
 - Fixed compatibility issues with SQLite3 (via [#24](https://github.com/eugene-manuilov/typeorm-uml/pull/24)).
 
 ## [v1.4.0] (2020-11-16)

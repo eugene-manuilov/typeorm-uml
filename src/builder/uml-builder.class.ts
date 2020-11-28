@@ -3,7 +3,7 @@ import { ConnectionMetadataBuilder } from 'typeorm/connection/ConnectionMetadata
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { ForeignKeyMetadata } from 'typeorm/metadata/ForeignKeyMetadata';
 
-import { TypeormUmlCommandFlags } from './TypeormUmlCommandFlags';
+import { Direction, Flags, Format } from '../types';
 
 interface ColumnDataTypeDefaults {
 	length?: string,
@@ -19,11 +19,11 @@ export class UmlBuilder {
 	 *
 	 * @public
 	 * @param {Connection} connection A database connection.
-	 * @param {TypeormUmlCommandFlags} flags An object with command flags.
+	 * @param {Flags} flags An object with command flags.
 	 */
 	public constructor(
 		protected readonly connection: Connection,
-		protected readonly flags: TypeormUmlCommandFlags
+		protected readonly flags: Flags
 	) {}
 
 	/**
@@ -35,7 +35,7 @@ export class UmlBuilder {
 	public buildUml(): string {
 		let uml = '@startuml\n\n';
 
-		if ( this.flags.format === 'txt' ) {
+		if ( this.flags.format === Format.TXT ) {
 			uml += '!define pkey(x) x\n';
 			uml += '!define fkey(x) x\n';
 			uml += '!define column(x) x\n';
@@ -50,9 +50,9 @@ export class UmlBuilder {
 		uml += 'hide methods\n\n';
 
 		const direction = this.flags.direction.toUpperCase();
-		if ( direction === 'LR' ) {
+		if ( direction === Direction.LR ) {
 			uml += 'left to right direction\n';
-		} else if ( direction === 'TB' ) {
+		} else if ( direction === Direction.TB ) {
 			uml += 'top to bottom direction\n';
 		}
 
