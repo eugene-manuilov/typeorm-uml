@@ -1,4 +1,4 @@
-# typeorm-uml 1.4.0
+# typeorm-uml
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/typeorm-uml.svg)](https://www.npmjs.com/package/typeorm-uml)
@@ -71,14 +71,14 @@ import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
 
 const configPath = join( __dirname, 'path/to/ormconfig.json' );
 const flags: Flags = {
-	direction: Direction.LR,
-	format: Format.SVG,
-	handwritten: true,
+    direction: Direction.LR,
+    format: Format.SVG,
+    handwritten: true,
 };
 
 const typeormUml = new TypeormUml();
 typeormUml.build( configPath, flags ).then( ( url ) => {
-	process.stdout.write( 'Diagram URL: ' + url + EOL );
+    process.stdout.write( 'Diagram URL: ' + url + EOL );
 } );
 ```
 
