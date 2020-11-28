@@ -1,0 +1,7 @@
+/node_modules/
+/lib/
+/examples/**/node_modules/
+/examples/**/*.js
+/examples/**/*.js.map
+/tsconfig.json
+/.eslintrc.js
