@@ -2,6 +2,10 @@
 
 ## [Unreleased] - TBD
 
+- 
+
+## [v1.5.0] (2020-11-28)
+
 - Added .eslintignore file.
 - Updated dependencies to the latest versions.
 - Updated Node.js version to be >= 10.0.0.
@@ -52,7 +56,8 @@
 - Added `--include` option to include only specific entities to the diagram.
 - Added `--exclude` option to exclude specific entities from the diagram.
 
-[Unreleased]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.4.0...master
+[Unreleased]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.5.0...master
+[v1.4.0]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.4.0...v1.5.0
 [v1.4.0]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.3.0...v1.4.0
 [v1.3.0]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.2.1...v1.3.0
 [v1.2.1]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.2.0...v1.2.1
