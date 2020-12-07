@@ -5,8 +5,10 @@ import { get } from 'http';
 import * as plantumlEncoder from 'plantuml-encoder';
 import { ConnectionOptionsReader, getConnectionManager, Connection } from 'typeorm';
 
-import { Flags, Format } from '../types';
+import { Flags, Format, SkinParams } from '../types';
 import { UmlBuilder } from './uml-builder.class';
+import { Styles } from './styles.class';
+import { MonochromeStyles, TextStyles } from './styles';
 
 export class TypeormUml {
 
@@ -21,8 +23,9 @@ export class TypeormUml {
 	 */
 	public async build( configName: string, flags: Flags ) : Promise<string> {
 		const connection = await this.getConnection( configName, flags );
+		const styles = this.getStyles( flags );
 
-		const builder = new UmlBuilder( connection, flags );
+		const builder = new UmlBuilder( connection, flags, styles );
 		const uml = builder.buildUml();
 
 		if ( connection.isConnected ) {
@@ -119,6 +122,30 @@ export class TypeormUml {
 	 */
 	private getPath( filename: string ): string {
 		return !isAbsolute( filename ) ? resolve( process.cwd(), filename ) : filename;
+	}
+
+	/**
+	 * Returns styles for the diagram.
+	 *
+	 * @private
+	 * @param {Flags} flags The current flags to use.
+	 * @returns {Styles} An instance of the Styles class.
+	 */
+	private getStyles( flags: Flags ): Styles {
+		const args: SkinParams = {
+			direction: flags.direction,
+			handwritten: flags.handwritten ? 'true' : 'false',
+		};
+
+		if ( flags.monochrome ) {
+			return new MonochromeStyles( args );
+		}
+
+		if ( flags.format === Format.TXT ) {
+			return new TextStyles( args );
+		}
+
+		return new Styles( args );
 	}
 
 }

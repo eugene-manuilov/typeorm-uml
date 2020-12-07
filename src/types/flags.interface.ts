@@ -1,10 +1,13 @@
+import { Direction } from './direction.enum';
+import { Format } from './format.enum';
+
 export interface Flags {
 	connection?: string,
-	direction?: string,
+	direction?: Direction,
 	download?: string,
 	echo?: boolean,
 	exclude?: string,
-	format?: string,
+	format?: Format,
 	handwritten?: boolean,
 	include?: string,
 	monochrome?: boolean,

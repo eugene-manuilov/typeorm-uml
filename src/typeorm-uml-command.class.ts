@@ -22,13 +22,13 @@ class TypeormUmlCommand extends Command {
 			description: 'The connection name.',
 			default: 'default',
 		} ),
-		direction: flags.string( {
+		direction: flags.enum<Direction>( {
 			char: 'D',
 			description: 'Arrows directions. TB=top to bottom, LR=left to right.',
 			default: Direction.TB,
 			options: [ Direction.TB, Direction.LR ],
 		} ),
-		format: flags.string( {
+		format: flags.enum<Format>( {
 			char: 'f',
 			description: 'The diagram file format.',
 			default: Format.PNG,

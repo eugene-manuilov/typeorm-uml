@@ -3,7 +3,8 @@ import { ConnectionMetadataBuilder } from 'typeorm/connection/ConnectionMetadata
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { ForeignKeyMetadata } from 'typeorm/metadata/ForeignKeyMetadata';
 
-import { Direction, Flags, Format } from '../types';
+import { Flags } from '../types';
+import { Styles } from './styles.class';
 
 interface ColumnDataTypeDefaults {
 	length?: string,
@@ -20,10 +21,12 @@ export class UmlBuilder {
 	 * @public
 	 * @param {Connection} connection A database connection.
 	 * @param {Flags} flags An object with command flags.
+	 * @param {Styles} styles Diagram styles.
 	 */
 	public constructor(
 		protected readonly connection: Connection,
-		protected readonly flags: Flags
+		protected readonly flags: Flags,
+		protected readonly styles: Styles
 	) {}
 
 	/**
@@ -33,42 +36,7 @@ export class UmlBuilder {
 	 * @returns {string} An uml string.
 	 */
 	public buildUml(): string {
-		let uml = '@startuml\n\n';
-
-		if ( this.flags.format === Format.TXT ) {
-			uml += '!define pkey(x) x\n';
-			uml += '!define fkey(x) x\n';
-			uml += '!define column(x) x\n';
-		} else {
-			uml += '!define pkey(x) <b><color:DarkGoldenRod><&key></color> x</b>\n';
-			uml += '!define fkey(x) <color:#AAAAAA><&key></color> x\n';
-			uml += '!define column(x) <color:#EFEFEF><&media-record></color> x\n';
-		}
-		uml += `!define table(x) entity x << (T,${ this.flags.monochrome ? '#FFAAAA' : 'white' }) >>\n\n`;
-
-		uml += 'hide stereotypes\n';
-		uml += 'hide methods\n\n';
-
-		const direction = this.flags.direction.toUpperCase();
-		if ( direction === Direction.LR ) {
-			uml += 'left to right direction\n';
-		} else if ( direction === Direction.TB ) {
-			uml += 'top to bottom direction\n';
-		}
-
-		uml += 'skinparam roundcorner 5\n';
-		uml += 'skinparam linetype ortho\n';
-		uml += 'skinparam shadowing false\n';
-		uml += `skinparam handwritten ${ this.flags.handwritten ? 'true' : 'false' }\n`;
-		if ( this.flags.monochrome ) {
-			uml += 'skinparam monochrome true\n';
-		} else {
-			uml += 'skinparam class {\n';
-			uml += '    BackgroundColor white\n';
-			uml += '    ArrowColor seagreen\n';
-			uml += '    BorderColor seagreen\n';
-			uml += '}\n';
-		}
+		let uml = '@startuml\n\n' + this.styles.toString();
 
 		const exclude = ( this.flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
 		const include = ( this.flags.include || '' ).split( ',' ).filter( ( item ) => item.trim().length );
