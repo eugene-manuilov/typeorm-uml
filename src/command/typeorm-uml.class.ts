@@ -1,7 +1,7 @@
 import { Command, flags } from '@oclif/command';
 
-import { TypeormUml } from './builder';
-import { Direction, Format } from './types';
+import { TypeormUml } from '../builder';
+import { Direction, Format } from '../types';
 
 class TypeormUmlCommand extends Command {
 
