@@ -82,11 +82,13 @@ class TypeormUmlCommand extends Command {
 			const typeormUml = new TypeormUml();
 			const colors = new Map<string, string>();
 
-			flags.color.forEach( ( color ) => {
-				if ( Array.isArray( color ) && color.length === 2 ) {
-					colors.set( color[0], color[1] );
-				}
-			} );
+			if ( Array.isArray( flags.color ) ) {
+				flags.color.forEach( ( color ) => {
+					if ( Array.isArray( color ) && color.length === 2 ) {
+						colors.set( color[0], color[1] );
+					}
+				} );
+			}
 
 			typeormUml.build(
 				args.configName,
