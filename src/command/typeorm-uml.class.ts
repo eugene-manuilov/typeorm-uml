@@ -63,6 +63,14 @@ class TypeormUmlCommand extends Command {
 				return color.split( '=', 2 );
 			},
 		} ),
+		'with-entity-names-only': flags.boolean( {
+			description: 'Whether or not to display only entity names and hide database table names.',
+			default: false,
+		} ),
+		'with-table-names-only': flags.boolean( {
+			description: 'Whether or not to display only database table names and hide entity names.',
+			default: false,
+		} ),
 		'with-enum-values': flags.boolean( {
 			description: 'Whether or not to show possible values for the enum type field.',
 			default: false,

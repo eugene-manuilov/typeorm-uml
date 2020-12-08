@@ -7,4 +7,6 @@ export interface SkinParams {
 	shadowing?: 'true' | 'false',
 	handwritten?: 'true' | 'false',
 	colors?: Map<string, string>,
+	entityNamesOnly?: boolean,
+	tableNamesOnly?: boolean,
 }

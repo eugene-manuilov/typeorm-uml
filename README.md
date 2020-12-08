@@ -49,7 +49,9 @@ OPTIONS
   --color=pkey=#aaa                Custom colors to use for the diagram.
   --handwritten                    Whether or not to use handwritten mode.
   --monochrome                     Whether or not to use monochrome colors.
+  --with-entity-names-only         Whether or not to display only entity names and hide database table names.
   --with-enum-values               Whether or not to show possible values for the enum type field.
+  --with-table-names-only          Whether or not to display only database table names and hide entity names.
   --plantuml-url                   [default: http://www.plantuml.com/plantuml] URL of the plantuml server to use.
 ```
 
@@ -108,10 +110,10 @@ typeormUml.build( configPath, flags ).then( ( url ) => {
 [**typeorm/typescript-example**](https://github.com/typeorm/typescript-example)
 
 ```sh-session
-typeorm-uml --format=svg
+typeorm-uml --format=svg --with-table-names-only
 ```
 
-[![typeorm/typescript-example](http://www.plantuml.com/plantuml/svg/ZLFTIyCm47_FNt4Yo0gEeR0NAMLppeyN7yOGtoHjRcjecol9ZMqu_tVJrCqo9veyzNvVTpawSYmjhwfIY3E52sqGwWAtlKq4SPh46PLaR-waBHweL6Xcf9BumXEIU12m13Rn84qEuiLUt2hFn-7yq1pulh2gJ5SnlM-kLrIejEnRpCYgKrAMQOcD4Wrhti86uXXwyyjrhXaZI18XSgqG7AD5ucsDhYrKo3af9mHJ3KoG4ZDLeBJFOar6k4ARMbfPWQMLKRu1WnQ6dNhf6sWSWQptwW0kbuhMsYnX8Kk77IINHgsjPaRp0yjAwHoy2_3dLcR5CkHEceaXZ1EGiRMqReiEvT8YcbRX7mZj4V3XnmiF19baN9BTGXGImdf1AuXkuEbvthkwYi2NlnO1HbROG2_ZsUHnFEjT3uSU_tQhoV7_dFnIoXDM7G9kkC7dqzVvSSJRLzSQtTl90HhIqt5q2-tvHx0F-DNvOzVlxtR1z4_I_bk84HhL_3gV)](http://www.plantuml.com/plantuml/svg/ZLFTIyCm47_FNt4Yo0gEeR0NAMLppeyN7yOGtoHjRcjecol9ZMqu_tVJrCqo9veyzNvVTpawSYmjhwfIY3E52sqGwWAtlKq4SPh46PLaR-waBHweL6Xcf9BumXEIU12m13Rn84qEuiLUt2hFn-7yq1pulh2gJ5SnlM-kLrIejEnRpCYgKrAMQOcD4Wrhti86uXXwyyjrhXaZI18XSgqG7AD5ucsDhYrKo3af9mHJ3KoG4ZDLeBJFOar6k4ARMbfPWQMLKRu1WnQ6dNhf6sWSWQptwW0kbuhMsYnX8Kk77IINHgsjPaRp0yjAwHoy2_3dLcR5CkHEceaXZ1EGiRMqReiEvT8YcbRX7mZj4V3XnmiF19baN9BTGXGImdf1AuXkuEbvthkwYi2NlnO1HbROG2_ZsUHnFEjT3uSU_tQhoV7_dFnIoXDM7G9kkC7dqzVvSSJRLzSQtTl90HhIqt5q2-tvHx0F-DNvOzVlxtR1z4_I_bk84HhL_3gV)
+[![typeorm/typescript-example](http://www.plantuml.com/plantuml/svg/ZPDHQzim4CVVzIbk7OmO4ae7UId6DCswhIzZX53sDcJh4el8EYDTICoIxpx9TXAJjQmssDBzxl-_aoK_U9QEjvKHueF2bRO8B7E38xIomZ6eFBuJGCkQ6xX9ywmBfRTvTdCHrHjiHli40ayBCkJklqYt-KP6eLsGoj9F8I5BRrkMmJxAp-BLITmfFyxQwn_DEJy4jfKTAfw-nZieAbHQJXmMvDHGAagj43oZG-AcHjy5AkIIL3yfj2iC2i5K0nFan4mLA1tSM9CLmc-qhQMJ5JZQMXLgM7Gm7SHDQ2_Q0xbWF02-b8fssgvX9Ot70IcbLJkdcT7sR00B8xs7FmB2zIYBpRejF8-hWbsf6LioSuvsNT2ZN3j4sod2Hq1t1OuYhB3TOfXBnZMvPWn5Fu84fB_COk5sPq4hIExX-SToT7UNG0ZtUm3nB4JqCblClyyMey_JQU37SusVv7aCTNXstkte7RxXk9bNZ0S9kEV8bq-_biE2iS3lVWKQ_MdOZDyabyPUfPTcOyhpTSCTEcLVuT3Mcxx7msHoEBIc_qqwpOLuGAlYx_eN)](http://www.plantuml.com/plantuml/svg/ZPDHQzim4CVVzIbk7OmO4ae7UId6DCswhIzZX53sDcJh4el8EYDTICoIxpx9TXAJjQmssDBzxl-_aoK_U9QEjvKHueF2bRO8B7E38xIomZ6eFBuJGCkQ6xX9ywmBfRTvTdCHrHjiHli40ayBCkJklqYt-KP6eLsGoj9F8I5BRrkMmJxAp-BLITmfFyxQwn_DEJy4jfKTAfw-nZieAbHQJXmMvDHGAagj43oZG-AcHjy5AkIIL3yfj2iC2i5K0nFan4mLA1tSM9CLmc-qhQMJ5JZQMXLgM7Gm7SHDQ2_Q0xbWF02-b8fssgvX9Ot70IcbLJkdcT7sR00B8xs7FmB2zIYBpRejF8-hWbsf6LioSuvsNT2ZN3j4sod2Hq1t1OuYhB3TOfXBnZMvPWn5Fu84fB_COk5sPq4hIExX-SToT7UNG0ZtUm3nB4JqCblClyyMey_JQU37SusVv7aCTNXstkte7RxXk9bNZ0S9kEV8bq-_biE2iS3lVWKQ_MdOZDyabyPUfPTcOyhpTSCTEcLVuT3Mcxx7msHoEBIc_qqwpOLuGAlYx_eN)
 
 ## Contribute
 

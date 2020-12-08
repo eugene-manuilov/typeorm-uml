@@ -36,16 +36,16 @@ export class UmlBuilder {
 	 * @returns {string} An uml string.
 	 */
 	public buildUml(): string {
-		let uml = '@startuml\n\n' + this.styles.toString();
-
-		const exclude = ( this.flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
-		const include = ( this.flags.include || '' ).split( ',' ).filter( ( item ) => item.trim().length );
-
 		const connectionMetadataBuilder = new ConnectionMetadataBuilder( this.connection );
 		const entityMetadatas = connectionMetadataBuilder.buildEntityMetadatas( this.connection.options.entities || [] );
 		if ( !entityMetadatas.length ) {
 			throw new Error( 'No entities have been found. Please, check your typeorm config to make sure you have configured it correctly.' );
 		}
+
+		let uml = '@startuml\n\n' + this.styles.toString();
+
+		const exclude = ( this.flags.exclude || '' ).split( ',' ).filter( ( item ) => item.trim().length );
+		const include = ( this.flags.include || '' ).split( ',' ).filter( ( item ) => item.trim().length );
 
 		let foreignKeys = '';
 		for ( let i = 0, len = entityMetadatas.length; i < len; i++ ) {
@@ -59,7 +59,7 @@ export class UmlBuilder {
 				continue;
 			}
 
-			uml += `\ntable( ${ entity.tableNameWithoutPrefix } ) {\n${
+			uml += `\ntable( ${ entity.name }, ${ entity.tableNameWithoutPrefix } ) as ${ entity.tableNameWithoutPrefix } {\n${
 				entity.columns.map( this.buildColumn, this ).join( '' )
 			}}\n`;
 
