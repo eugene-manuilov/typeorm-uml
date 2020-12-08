@@ -32,7 +32,13 @@ export class Styles {
 	 * @returns {IterableIterator<string>} Styles iterator.
 	 */
 	protected * defineTable(): IterableIterator<string> {
-		yield `!define table(x) entity x << (T,${ this.skinParams.colors.get( 'class.BackgroundColor' ) || 'white' }) >>`;
+		if ( this.skinParams.entityNamesOnly ) {
+			yield '!define table(ename, dbname) entity "<b>ename</b>"';
+		} else if ( this.skinParams.tableNamesOnly ) {
+			yield '!define table(ename, dbname) entity "<b>dbname</b>"';
+		} else {
+			yield '!define table(ename, dbname) entity "<b>ename</b>\\n<font size=10 color=gray>(dbname)</font>"';
+		}
 	}
 
 	/**
@@ -102,6 +108,7 @@ export class Styles {
 	protected * hideNotNeededUI(): IterableIterator<string> {
 		yield 'hide stereotypes';
 		yield 'hide methods';
+		yield 'hide circle';
 	}
 
 	/**

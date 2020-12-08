@@ -11,6 +11,8 @@ export interface Flags {
 	handwritten?: boolean,
 	include?: string,
 	monochrome?: boolean,
+	['with-entity-names-only']?: boolean,
+	['with-table-names-only']?: boolean,
 	['with-enum-values']?: boolean,
 	colors?: Map<string, string>,
 }

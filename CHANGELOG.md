@@ -3,8 +3,12 @@
 ## [Unreleased] - TBD
 
 - Added `--color` flag to override diagram colors.
+- Added `--with-entity-names-only` flag to display only entity names in entity titles.
+- Added `--with-table-names-only` flag to display only database table names in entity titles.
 - Updated dependencies to the latest versions.
 - Updated UML builder to handle styles in a separate class.
+- Updated entity titles to display entity names and database tables.
+- Removed circles from entity titles.
 
 ## [v1.5.0] (2020-11-28)
 

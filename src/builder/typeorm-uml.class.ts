@@ -136,6 +136,8 @@ export class TypeormUml {
 			direction: flags.direction,
 			handwritten: flags.handwritten ? 'true' : 'false',
 			colors: flags.colors,
+			entityNamesOnly: flags['with-entity-names-only'],
+			tableNamesOnly: flags['with-table-names-only'],
 		};
 
 		if ( flags.monochrome ) {
