@@ -7,7 +7,7 @@
 
 A command line tool to generate UML diagrams for Typeorm projects. It uses [plantuml](https://plantuml.com/) to render diagrams and outputs an URL to a diagram.
 
-## Instalation
+## Installation
 
 Install this command as a development dependency to your project:
 
@@ -52,6 +52,7 @@ OPTIONS
   --with-entity-names-only         Whether or not to display only entity names and hide database table names.
   --with-enum-values               Whether or not to show possible values for the enum type field.
   --with-table-names-only          Whether or not to display only database table names and hide entity names.
+  --plantuml-url                   [default: http://www.plantuml.com/plantuml] URL of the plantuml server to use.
 ```
 
 ## Defining custom colors
@@ -71,6 +72,15 @@ If you use `.ts` entities in your Typeorm config, then run this command with `ts
 ```sh-session
 ts-node ./node_modules/.bin/typeorm-uml ormconfig.json
 ```
+
+## PlantUML
+
+Under the hood, this library uses [PlantUML](https://plantuml.com/) to generate diagrams.
+
+By default it uses the [official plantuml server](http://www.plantuml.com/plantuml).
+
+If you want to use a custom server, use the `plantuml-url` flag and omit the trailing slash.
+
 
 ## Run Programmatically
 

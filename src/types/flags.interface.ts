@@ -15,4 +15,5 @@ export interface Flags {
 	['with-table-names-only']?: boolean,
 	['with-enum-values']?: boolean,
 	colors?: Map<string, string>,
+	['plantuml-url']?: string,
 }
