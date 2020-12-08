@@ -92,10 +92,9 @@ export class TypeormUml {
 
 		const format = encodeURIComponent( flags.format );
 		const schema = encodeURIComponent( encodedUml );
+		const plantumlUrl = flags['plantuml-url'] || 'https://www.plantuml.com/plantuml';
 
-		const plantumlUrl = flags['plantuml-url'] || 'http://www.plantuml.com/plantuml';
-
-		return `${ plantumlUrl }/${ format }/${ schema }`;
+		return `${ plantumlUrl.replace( /\/$/, '' ) }/${ format }/${ schema }`;
 	}
 
 	/**

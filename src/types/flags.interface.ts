@@ -2,6 +2,7 @@ import { Direction } from './direction.enum';
 import { Format } from './format.enum';
 
 export interface Flags {
+	colors?: Map<string, string>,
 	connection?: string,
 	direction?: Direction,
 	download?: string,
@@ -11,9 +12,8 @@ export interface Flags {
 	handwritten?: boolean,
 	include?: string,
 	monochrome?: boolean,
+	['plantuml-url']?: string,
 	['with-entity-names-only']?: boolean,
 	['with-table-names-only']?: boolean,
 	['with-enum-values']?: boolean,
-	colors?: Map<string, string>,
-	['plantuml-url']?: string,
 }

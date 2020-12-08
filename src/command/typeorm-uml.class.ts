@@ -75,6 +75,10 @@ class TypeormUmlCommand extends Command {
 			description: 'Whether or not to show possible values for the enum type field.',
 			default: false,
 		} ),
+		'plantuml-url': flags.string( {
+			description: 'URL of the plantuml server to use.',
+			default: 'https://www.plantuml.com/plantuml',
+		} ),
 	};
 
 	/**

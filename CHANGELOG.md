@@ -3,6 +3,7 @@
 ## [Unreleased] - TBD
 
 - Added `--color` flag to override diagram colors.
+- Added `--plantuml-url` flag to override PlantUML server.
 - Added `--with-entity-names-only` flag to display only entity names in entity titles.
 - Added `--with-table-names-only` flag to display only database table names in entity titles.
 - Updated dependencies to the latest versions.

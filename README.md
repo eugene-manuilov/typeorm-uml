@@ -49,10 +49,10 @@ OPTIONS
   --color=pkey=#aaa                Custom colors to use for the diagram.
   --handwritten                    Whether or not to use handwritten mode.
   --monochrome                     Whether or not to use monochrome colors.
+  --plantuml-url=plantuml-url      [default: https://www.plantuml.com/plantuml] URL of the plantuml server to use.
   --with-entity-names-only         Whether or not to display only entity names and hide database table names.
   --with-enum-values               Whether or not to show possible values for the enum type field.
   --with-table-names-only          Whether or not to display only database table names and hide entity names.
-  --plantuml-url                   [default: http://www.plantuml.com/plantuml] URL of the plantuml server to use.
 ```
 
 ## Defining custom colors
@@ -75,12 +75,9 @@ ts-node ./node_modules/.bin/typeorm-uml ormconfig.json
 
 ## PlantUML
 
-Under the hood, this library uses [PlantUML](https://plantuml.com/) to generate diagrams.
+Under the hood, this library uses the [PlantUML Language](https://plantuml.com/) to define diagrams and the [official plantuml server](http://www.plantuml.com/plantuml) to draw it.
 
-By default it uses the [official plantuml server](http://www.plantuml.com/plantuml).
-
-If you want to use a custom server, use the `plantuml-url` flag and omit the trailing slash.
-
+In most cases, it's fine to use it without a doubt. However, it's not always the case. If you work on a project that has a strict security level and you can't use the public server, then you can set up your own using the [official docker image](https://hub.docker.com/r/plantuml/plantuml-server) of PlantUML server and use the `--plantuml-url` flag to let this library know its location.
 
 ## Run Programmatically
 
