@@ -13,4 +13,5 @@ export interface Flags {
 	monochrome?: boolean,
 	['with-enum-values']?: boolean,
 	colors?: Map<string, string>,
+	['plantuml-url']?: string,
 }
