@@ -32,7 +32,7 @@ export class Styles {
 	 * @returns {IterableIterator<string>} Styles iterator.
 	 */
 	protected * defineTable(): IterableIterator<string> {
-		yield '!define table(x) entity x << (T,white) >>';
+		yield `!define table(x) entity x << (T,${ this.skinParams.colors.get( 'class.BackgroundColor' ) || 'white' }) >>`;
 	}
 
 	/**
@@ -43,9 +43,9 @@ export class Styles {
 	 * @returns {IterableIterator<string>} Styles iterator.
 	 */
 	protected * defineColumns(): IterableIterator<string> {
-		yield '!define pkey(x) <b><color:DarkGoldenRod><&key></color> x</b>';
-		yield '!define fkey(x) <color:#AAAAAA><&key></color> x';
-		yield '!define column(x) <color:#EFEFEF><&media-record></color> x';
+		yield `!define pkey(x) <b><color:${ this.skinParams.colors.get( 'pkey' ) || 'DarkGoldenRod' }><&key></color> x</b>`;
+		yield `!define fkey(x) <color:${ this.skinParams.colors.get( 'fkey' ) || '#AAAAAA' }><&key></color> x`;
+		yield `!define column(x) <color:${ this.skinParams.colors.get( 'column' ) || '#EFEFEF' }><&media-record></color> x`;
 	}
 
 	/**
@@ -71,9 +71,9 @@ export class Styles {
 	 */
 	protected * defineColors(): IterableIterator<string> {
 		yield 'skinparam class {';
-		yield '    BackgroundColor white';
-		yield '    ArrowColor seagreen';
-		yield '    BorderColor seagreen';
+		yield `    BackgroundColor ${ this.skinParams.colors.get( 'class.BackgroundColor' ) || 'white' }`;
+		yield `    ArrowColor ${ this.skinParams.colors.get( 'class.ArrowColor' ) || 'seagreen' }`;
+		yield `    BorderColor ${ this.skinParams.colors.get( 'class.BorderColor' ) || 'seagreen' }`;
 		yield '}';
 	}
 

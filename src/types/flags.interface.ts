@@ -12,4 +12,5 @@ export interface Flags {
 	include?: string,
 	monochrome?: boolean,
 	['with-enum-values']?: boolean,
+	colors?: Map<string, string>,
 }

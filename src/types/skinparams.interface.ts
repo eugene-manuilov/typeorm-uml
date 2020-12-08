@@ -6,4 +6,5 @@ export interface SkinParams {
 	linetype?: 'ortho' | 'polyline',
 	shadowing?: 'true' | 'false',
 	handwritten?: 'true' | 'false',
+	colors?: Map<string, string>,
 }

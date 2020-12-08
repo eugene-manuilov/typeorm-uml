@@ -135,6 +135,7 @@ export class TypeormUml {
 		const args: SkinParams = {
 			direction: flags.direction,
 			handwritten: flags.handwritten ? 'true' : 'false',
+			colors: flags.colors,
 		};
 
 		if ( flags.monochrome ) {

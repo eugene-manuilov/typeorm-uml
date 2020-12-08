@@ -40,16 +40,27 @@ ARGUMENTS
   CONFIGNAME  [default: ormconfig.json] Path to the Typeorm config file.
 
 OPTIONS
-  -c, --connection=connection    [default: default] The connection name.
-  -D, --direction=direction      [default: TB] Arrows directions. TB=top to bottom, LR=left to right.
-  -d, --download=download        The filename where to download the diagram.
-  -e, --exclude=exclude          Comma-separated list of entities to exclude from the diagram.
-  -f, --format=png|svg|txt|puml  [default: png] The diagram file format.
-  -i, --include=include          Comma-separated list of entities to include into the diagram.
-  --handwritten                  Whether or not to use handwritten mode.
-  --monochrome                   Whether or not to use monochrome colors.
-  --with-enum-values             Show possible values for enum type field.
+  -D, --direction=(TB|LR)          [default: TB] Arrows directions. TB=top to bottom, LR=left to right.
+  -c, --connection=connection      [default: default] The connection name.
+  -d, --download=download          The filename where to download the diagram.
+  -e, --exclude=exclude            Comma-separated list of entities to exclude from the diagram.
+  -f, --format=(png|svg|txt|puml)  [default: png] The diagram file format.
+  -i, --include=include            Comma-separated list of entities to include into the diagram.
+  --color=pkey=#aaa                Custom colors to use for the diagram.
+  --handwritten                    Whether or not to use handwritten mode.
+  --monochrome                     Whether or not to use monochrome colors.
+  --with-enum-values               Whether or not to show possible values for the enum type field.
 ```
+
+## Defining custom colors
+
+If you want to override colors used in the diagram, you can do it using `--color` flag. It accepts the key-value pair where key is an element and value is a color. You can use multiple `--color` flags to override multiple elements. For example:
+
+```sh-session
+typeorm-uml path/to/ormconfig.json --color class.ArrowColor=#ff9900 --color class.BorderColor=#ff9900 --color class.BackgroundColor=#efefef --color column=#ddd
+```
+
+You can use `pkey`, `fkey` and `column` colors to override entity column icons, and `class.BackgroundColor`, `class.BorderColor`, `class.ArrowColor` to override enity class styles.
 
 ## Typescript
 

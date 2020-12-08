@@ -54,8 +54,17 @@ class TypeormUmlCommand extends Command {
 			char: 'i',
 			description: 'Comma-separated list of entities to include into the diagram.',
 		} ),
+		color: flags.string( {
+			description: 'Custom colors to use for the diagram.',
+			helpLabel: '--color',
+			helpValue: 'pkey=#aaa',
+			multiple: true,
+			parse( color ) {
+				return color.split( '=', 2 );
+			},
+		} ),
 		'with-enum-values': flags.boolean( {
-			description: 'Show possible values for enum type field.',
+			description: 'Whether or not to show possible values for the enum type field.',
 			default: false,
 		} ),
 	};
@@ -69,12 +78,21 @@ class TypeormUmlCommand extends Command {
 	public async run(): Promise<any> {
 		try {
 			const { args, flags } = this.parse( TypeormUmlCommand );
+
 			const typeormUml = new TypeormUml();
+			const colors = new Map<string, string>();
+
+			flags.color.forEach( ( color ) => {
+				if ( Array.isArray( color ) && color.length === 2 ) {
+					colors.set( color[0], color[1] );
+				}
+			} );
 
 			typeormUml.build(
 				args.configName,
 				{
 					...flags,
+					colors,
 					echo: true,
 				}
 			);

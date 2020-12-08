@@ -2,6 +2,7 @@
 
 ## [Unreleased] - TBD
 
+- Added `--color` flag to override diagram colors.
 - Updated dependencies to the latest versions.
 - Updated UML builder to handle styles in a separate class.
 
