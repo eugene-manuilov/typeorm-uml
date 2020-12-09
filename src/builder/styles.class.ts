@@ -22,7 +22,11 @@ export class Styles {
 	 * @public
 	 * @param {SkinParams} skinParams Skin parameters.
 	 */
-	public constructor( protected readonly skinParams: SkinParams ) {}
+	public constructor( protected readonly skinParams: SkinParams ) {
+		if ( !this.skinParams.colors ) {
+			this.skinParams.colors = new Map<string, string>();
+		}
+	}
 
 	/**
 	 * Defines table styles.
