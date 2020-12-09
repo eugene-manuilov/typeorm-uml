@@ -49,7 +49,7 @@ OPTIONS
   --color=pkey=#aaa                Custom colors to use for the diagram.
   --handwritten                    Whether or not to use handwritten mode.
   --monochrome                     Whether or not to use monochrome colors.
-  --plantuml-url=plantuml-url      [default: https://www.plantuml.com/plantuml] URL of the plantuml server to use.
+  --plantuml-url=plantuml-url      [default: http://www.plantuml.com/plantuml] URL of the plantuml server to use.
   --with-entity-names-only         Whether or not to display only entity names and hide database table names.
   --with-enum-values               Whether or not to show possible values for the enum type field.
   --with-table-names-only          Whether or not to display only database table names and hide entity names.

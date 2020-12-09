@@ -77,7 +77,7 @@ class TypeormUmlCommand extends Command {
 		} ),
 		'plantuml-url': flags.string( {
 			description: 'URL of the plantuml server to use.',
-			default: 'https://www.plantuml.com/plantuml',
+			default: 'http://www.plantuml.com/plantuml',
 		} ),
 	};
 
