@@ -9,6 +9,7 @@
 - Updated dependencies to the latest versions.
 - Updated UML builder to handle styles in a separate class.
 - Updated entity titles to display entity names and database tables.
+- Updated TypeormUml class to accept either a config path or a connection itself.
 - Removed circles from entity titles.
 
 ## [v1.5.0] (2020-11-28)

@@ -17,13 +17,15 @@ export class TypeormUml {
 	 *
 	 * @async
 	 * @public
-	 * @param {string} configName The typeorm config filename or path to it.
+	 * @param {string|Connection} configNameOrConnection The typeorm config filename or connection instance.
 	 * @param {Flags} flags Build flags.
 	 * @returns {string} Diagram URL or UML code depending on selected format.
 	 */
-	public async build( configName: string, flags: Flags ) : Promise<string> {
-		const connection = await this.getConnection( configName, flags );
+	public async build( configNameOrConnection: string | Connection, flags: Flags ) : Promise<string> {
 		const styles = this.getStyles( flags );
+		const connection: Connection = typeof configNameOrConnection === 'string'
+			? await this.getConnection( configNameOrConnection, flags )
+			: configNameOrConnection;
 
 		const builder = new UmlBuilder( connection, flags, styles );
 		const uml = builder.buildUml();
