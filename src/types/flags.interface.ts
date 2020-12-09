@@ -1,8 +1,9 @@
+import { Colors } from './colors.interface';
 import { Direction } from './direction.enum';
 import { Format } from './format.enum';
 
 export interface Flags {
-	colors?: Map<string, string>,
+	colors?: Map<keyof Colors, string>,
 	connection?: string,
 	direction?: Direction,
 	download?: string,

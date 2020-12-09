@@ -1,7 +1,7 @@
 import { Command, flags } from '@oclif/command';
 
 import { TypeormUml } from '../builder';
-import { Direction, Format } from '../types';
+import { Colors, Direction, Format } from '../types';
 
 class TypeormUmlCommand extends Command {
 
@@ -92,7 +92,7 @@ class TypeormUmlCommand extends Command {
 			const { args, flags } = this.parse( TypeormUmlCommand );
 
 			const typeormUml = new TypeormUml();
-			const colors = new Map<string, string>();
+			const colors = new Map<keyof Colors, string>();
 
 			if ( Array.isArray( flags.color ) ) {
 				flags.color.forEach( ( color ) => {

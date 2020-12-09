@@ -1,7 +1,8 @@
+import { Colors } from './colors.interface';
 import { Direction } from './direction.enum';
 
 export interface SkinParams {
-	colors?: Map<string, string>,
+	colors?: Map<keyof Colors, string>,
 	direction?: Direction,
 	entityNamesOnly?: boolean,
 	handwritten?: 'true' | 'false',

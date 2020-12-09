@@ -1,4 +1,4 @@
-import { Direction, SkinParams } from '../types';
+import { Colors, Direction, SkinParams } from '../types';
 
 export class Styles {
 
@@ -24,7 +24,7 @@ export class Styles {
 	 */
 	public constructor( protected readonly skinParams: SkinParams ) {
 		if ( !this.skinParams.colors ) {
-			this.skinParams.colors = new Map<string, string>();
+			this.skinParams.colors = new Map<keyof Colors, string>();
 		}
 	}
 
