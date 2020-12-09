@@ -81,7 +81,7 @@ In most cases, it's fine to use it without a doubt. However, it's not always the
 
 ## Run Programmatically
 
-You can also import the `TypeormUml` class from this package and build UML diagrams in your code. See this small example:
+You can also import the `TypeormUml` class from this package and build UML diagrams on your own. See this small example:
 
 ```typescript
 import { EOL } from 'os';
@@ -98,6 +98,29 @@ const flags: Flags = {
 
 const typeormUml = new TypeormUml();
 typeormUml.build( configPath, flags ).then( ( url ) => {
+    process.stdout.write( 'Diagram URL: ' + url + EOL );
+} );
+```
+
+Please, pay attention that the `TypeormUml::build()` method also accepts connection instance itself, so you don't need to compose a configuration file if you don't have one in your project. Here is another small example of how it can be used in the `typeorm/typescript-example` project:
+
+```typescript
+import { EOL } from 'os';
+import { join } from 'path';
+
+import { Direction, Flags, Format, TypeormUml } from 'typeorm-uml';
+import { createConnection } from 'typeorm';
+
+createConnection().then( async ( connection ) => {
+    const flags: Flags = {
+        direction: Direction.LR,
+        format: Format.SVG,
+        handwritten: true,
+    };
+
+    const typeormUml = new TypeormUml();
+    const url = await typeormUml.build( connection, flags );
+
     process.stdout.write( 'Diagram URL: ' + url + EOL );
 } );
 ```
