@@ -3,6 +3,7 @@
 ## [Unreleased] - TBD
 
 - Updated dependencies to the latest versions.
+- Fixed wrong relationship arrow for one-to-one relationships.
 
 ## [v1.6.0] (2020-12-10)
 

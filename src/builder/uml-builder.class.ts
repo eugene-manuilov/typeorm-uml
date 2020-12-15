@@ -136,9 +136,15 @@ export class UmlBuilder {
 	 * @returns {string} An uml connection string.
 	 */
 	protected buildForeignKey( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
+		const { columns } = foreignKey;
+
 		const zeroOrMore = '}o';
 		const oneOrMore = '}|';
-		const relationship = foreignKey.columns.some( ( column ) => !column.isNullable ) ? oneOrMore : zeroOrMore;
+
+		let relationship = columns.some( ( column ) => !column.isNullable ) ? oneOrMore : zeroOrMore;
+		if ( columns.length === 1 && columns[0].relationMetadata.isOneToOne ) {
+			relationship = '||';
+		}
 
 		return `${ entity.tableNameWithoutPrefix } ${ relationship }--|| ${ foreignKey.referencedTablePath }\n`;
 	}
