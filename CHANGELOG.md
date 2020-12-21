@@ -2,7 +2,7 @@
 
 ## [Unreleased] - TBD
 
-- 
+- Fixed non visible properties issue.
 
 ## [v1.6.1] (2020-12-15)
 
