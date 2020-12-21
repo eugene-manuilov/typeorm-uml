@@ -2,6 +2,7 @@
 
 ## [Unreleased] - TBD
 
+- Updated dependencies to the latest versions.
 - Fixed non visible properties issue.
 
 ## [v1.6.1] (2020-12-15)
