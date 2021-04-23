@@ -4,6 +4,7 @@ import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { ForeignKeyMetadata } from 'typeorm/metadata/ForeignKeyMetadata';
 
 import { Flags } from '../types';
+import { Relationship, RelationshipConnector } from '../types/relationship.interface';
 import { Styles } from './styles.class';
 
 interface ColumnDataTypeDefaults {
@@ -138,15 +139,57 @@ export class UmlBuilder {
 	protected buildForeignKey( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
 		const { columns } = foreignKey;
 
-		const zeroOrMore = '}o';
-		const oneOrMore = '}|';
+		let relationship: Relationship = {
+			leftEntity: entity.tableNameWithoutPrefix,
+			leftConnector: columns.some( ( column ) => !column.isNullable )
+				? RelationshipConnector.ONE_OR_MORE
+				: RelationshipConnector.ZERO_OR_MORE,
+			rightConnector: RelationshipConnector.ONE,
+			rightEntity: foreignKey.referencedTablePath,
+		};
 
-		let relationship = columns.some( ( column ) => !column.isNullable ) ? oneOrMore : zeroOrMore;
 		if ( columns.length === 1 && columns[0].relationMetadata.isOneToOne ) {
-			relationship = '||';
+			relationship.leftConnector = RelationshipConnector.ONE;
 		}
 
-		return `${ entity.tableNameWithoutPrefix } ${ relationship }--|| ${ foreignKey.referencedTablePath }\n`;
+		if ( this.flags['reverse-relationships'] ) {
+			relationship = this.reverseRelationship( relationship );
+		}
+
+		return `${ this.toRelationshipString( relationship ) }\n`;
+	}
+
+	/**
+	 * Reverse a relationship horizontally.
+	 *
+	 * @protected
+	 * @param {Relationship} relationship A relationship.
+	 * @returns {Relationship} Reversed relationship.
+	 */
+	protected reverseRelationship( relationship: Relationship ) {
+		return {
+			leftEntity: relationship.rightEntity,
+			leftConnector: relationship.rightConnector,
+			rightConnector: relationship.leftConnector,
+			rightEntity: relationship.leftEntity,
+		};
+	}
+
+	/**
+	 * Relationship to string
+	 * ex) "A }o--||"
+	 *
+	 * @param {Relationship} relationship A relationship.
+	 * @returns {string} Formatted relationship string.
+	 */
+	protected toRelationshipString( relationship: Relationship ) {
+		const rightConnector = ( relationship.rightConnector as string )
+			.split( '' )
+			.reverse()
+			.join( '' )
+			.replace( '{', '}' )
+			.replace( '}', '{' );
+		return `${ relationship.leftEntity } ${ relationship.leftConnector }--${ rightConnector } ${ relationship.rightEntity }`;
 	}
 
 	/**

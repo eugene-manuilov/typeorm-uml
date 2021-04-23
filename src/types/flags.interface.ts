@@ -17,4 +17,5 @@ export interface Flags {
 	['with-entity-names-only']?: boolean,
 	['with-table-names-only']?: boolean,
 	['with-enum-values']?: boolean,
+	['reverse-relationships']?: boolean,
 }
