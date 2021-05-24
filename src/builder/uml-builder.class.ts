@@ -138,15 +138,15 @@ export class UmlBuilder {
 	protected buildForeignKey( foreignKey: ForeignKeyMetadata, entity: EntityMetadata ): string {
 		const { columns } = foreignKey;
 
-		const zeroOrMore = '}o';
-		const oneOrMore = '}|';
+		const zeroOrMore = 'o{';
+		const oneOrMore = '|{';
 
 		let relationship = columns.some( ( column ) => !column.isNullable ) ? oneOrMore : zeroOrMore;
 		if ( columns.length === 1 && columns[0].relationMetadata.isOneToOne ) {
 			relationship = '||';
 		}
 
-		return `${ entity.tableNameWithoutPrefix } ${ relationship }--|| ${ foreignKey.referencedTablePath }\n`;
+		return `${ foreignKey.referencedTablePath } ||--${ relationship } ${ entity.tableNameWithoutPrefix }\n`;
 	}
 
 	/**

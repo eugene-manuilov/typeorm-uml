@@ -3,6 +3,7 @@
 ## [Unreleased] - TBD
 
 - Updated dependencies to the latest versions.
+- Updated relationships have `Parent <--> Child` format instead of `Child <--> Parent` which lead to nicer diagrams.
 
 ## [v1.6.2] (2020-12-21)
 
