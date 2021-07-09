@@ -4,6 +4,11 @@
 
 - 
 
+## [v1.6.4] (2021-07-09)
+
+- Updated dependencies to the latest versions.
+- Fixed syntax errors when tables with hypens were used.
+
 ## [v1.6.3] (2021-05-24)
 
 - Updated dependencies to the latest versions.
@@ -83,7 +88,8 @@
 - Added `--include` option to include only specific entities to the diagram.
 - Added `--exclude` option to exclude specific entities from the diagram.
 
-[Unreleased]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.6.3...master
+[Unreleased]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.6.4...master
+[v1.6.4]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.6.3...v1.6.4
 [v1.6.3]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.6.2...v1.6.3
 [v1.6.2]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.6.1...v1.6.2
 [v1.6.1]: https://github.com/eugene-manuilov/typeorm-uml/compare/v1.6.0...v1.6.1
