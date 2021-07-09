@@ -146,7 +146,7 @@ export class UmlBuilder {
 			relationship = '||';
 		}
 
-		return `${ foreignKey.referencedTablePath } ||--${ relationship } ${ entity.tableNameWithoutPrefix }\n`;
+		return `"${ foreignKey.referencedTablePath }" ||--${ relationship } "${ entity.tableNameWithoutPrefix }"\n`;
 	}
 
 	/**
