@@ -142,7 +142,7 @@ export class UmlBuilder {
 		const oneOrMore = '|{';
 
 		let relationship = columns.some( ( column ) => !column.isNullable ) ? oneOrMore : zeroOrMore;
-		if ( columns.length === 1 && columns[0].relationMetadata.isOneToOne ) {
+		if ( columns.length === 1 && columns[0].relationMetadata?.isOneToOne ) {
 			relationship = '||';
 		}
 
