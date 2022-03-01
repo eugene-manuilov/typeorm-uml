@@ -28,7 +28,7 @@ export class TypeormUml {
 			: configNameOrConnection;
 
 		const builder = new UmlBuilder( connection, flags, styles );
-		const uml = builder.buildUml();
+		const uml = await builder.buildUml();
 
 		if ( connection.isConnected ) {
 			await connection.close();
