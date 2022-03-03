@@ -2,6 +2,10 @@
 
 ## [Unreleased] - TBD
 
+-
+
+## [v1.6.5] (2022-03-03)
+
 - Updated dependencies to the latest version.
 - Fixed issues with the new version of the `ConnectionMetadataBuilder` class.
 - Fixed issues that can occur when the `relationMetadata` is undefined.
