@@ -2,7 +2,9 @@
 
 ## [Unreleased] - TBD
 
-- 
+- Updated dependencies to the latest version.
+- Fixed issues with the new version of the `ConnectionMetadataBuilder` class.
+- Fixed issues that can occur when the `relationMetadata` is undefined.
 
 ## [v1.6.4] (2021-07-09)
 
@@ -75,7 +77,7 @@
 - Fixed typo in the readme file.
 - Updated dependencies to the latest versions.
 
-## [v1.1.2] (2020-01-11) 
+## [v1.1.2] (2020-01-11)
 - Fixed UML generation issue.
 
 ## [v1.1.1] (2020-01-11)
