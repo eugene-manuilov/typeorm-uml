@@ -24,31 +24,31 @@ jobs:
         run: npm run build
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 10.x
+          - 12.x
+          - 14.x
     steps:
-      - name: Checkout typeorm-uml
-        uses: actions/checkout@v2
-      - name: Checkout typeorm/typescript-example
-        uses: actions/checkout@v2
-        with:
-          repository: typeorm/typescript-example
-          path: example
-      - name: Setup node
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: '10.x'
+          node-version: ${{ matrix.node-version }}
       - name: Install dependencies and build typeorm-uml
         run: |
           npm ci --ignore-scripts
           npm run build
         env:
           CI: true
-      - name: Install dependencies and build typeorm/typescript-example
-        working-directory: example
+      - name: Install dependencies and build the shopping cart example
+        working-directory: examples/shopping-cart
         run: |
           npm i
           npx tsc
       - name: Test uml diagram
-        working-directory: example
-        run: test "$(../bin/run)" = "$EXPECTED"
+        working-directory: examples/shopping-cart
+        run: test "$(../../bin/run)" = "$EXPECTED"
         env:
-          EXPECTED: http://www.plantuml.com/plantuml/png/ZPDHQzim4CVVzIbk7GmR4h8Cyb9SqophjhwC4SBOmw38rjaMaIKZAIHUakzUINOJawLqDjZI_Ux-_vCbtnjBjTtKWf1t30ik4IpD14OeQOqZO9b_nu3ISjl2JPAbWIIJBFqZaq992uR_nRlfHyYLKFgkrBHDexukcVYCzEQitgonZNOnx0kEWXt12IQXyFOBrUjlIZ2KIyNIv8DBJ9D9O2dilE59fBWKwHJUpyFrJ-sfpWKsjRnM-V3LtwwoHiRfM6EkD1jAa8ep16DHex9jWwOBr6WhnVf9pdKka12h6h0ACcMjge5nfsQvaeIODPSDrRG6hJQIEG-96cQ3k71jUdbGsWaFWAaeKrikIoYeC3WW5PLigxcrA7isWBcWni2UWBi-qtnT1kE5NnLiAsunaBdMQji53T9I8ygkmdq4r1VWIDmAmnc11RLOAjsE8Ez740Crvvat3ZiEd45y2uy_Lj5q6eCBzti1_fnuz6k-N7oVBwDFivdZnvF7JsNi21htxBJ3w3zqtNaLLuG72RYpdgyUVg-6XjxWgLy1H_CoR4UladDZL-cvMP_oUDbmXrwoBx1hAopuS1YF3_jNFSZ9xAr4Se-I-V_z6G00
+          EXPECTED: http://www.plantuml.com/plantuml/png/xLXjRzis4FwkNy5vm6032H9do0eKhb4tBwtH91qoTTY00GKjdcN2agYHL1mlwN_laP9iIPPaDqtG1bW292AVunrvhpo-LffAdOI1u_p4OCeZ89fE0kX2H4FO8snY_lS8H9hh9UaC9aEB30ucmt-YmLH4cYZ-7xpg7n9F14A-yYLT3hlPki61eHXsrjpZEIoxjproD-KGiCy46GximfUdLCxVYe11T2tOSF0B4Wu71nORabiZSCLaMcMISlXvP7ysrgxMuKGIHdKhpyxDBwuCWN6wBy4JaXLPE3FEW2WD4eHUng3IYH3qJB1iu77f1U0uMiH42p8HMekGC8xSD1UHuwWvZs8gQKYaI2A6CYAGvBWm7-0s3NiY938k06f6cLZmo2TJ6YWe83CQiONaMaEKOGNG2wXIvCuX-FE6UdFV2ZunfoAB6TTWaP6KOf5EAg2-18ZI5QW4a1NWiuCdj3v2Jj1tnXh2FUBXroTa5v8UeQemDAAjpGbdfFUIl1c_7L-vtQF37a746fB4Kh34q-CgmM1m_duuN94PfiqqcMs9cYU6vC_HzScxqNMtVvXAok5OSWyCmVd5Xv7RxH-LKCQLXmhIZGJ_9ZID12Juut9qSM7syLk9XAAnRwm8Ttprjy7x9ToJG3MmaHLoEdBFtF7bMP4WYLaxWOSn1UactRE_N69CihA81b_8fR58-fKR91ljP0ygaVrsLQCY0YWg-yLnwQGO7DIjqbGDeeB4RyDR3ljxwZUNA6OlTw9FHcXwvjBCe_XXlYUaBcxv-6jtV0qt71RhFKixBkywctl4-7cmMQicaLIRHDGS0d4o2RYQ0Vk6A5ZnU50SkDJVmqhcfper7-sA_C5SUkKQ9P_OoHaI1V872LsLX26Lozm9qhCMzc3gNBCJVVT4hcPOnvymZU_WuVPsfffnY9XwK7nyC8KzBTssnXTgTs7yYCd7Sdq6rVj9gxChQQIelGnYTbeFiYnLcFZsIFygjNk2jKRwbb0Di-LDWQIfJjJtKhfrzSpD2nx-YCbKWL9ej9ImKOLYZXVqjcovJKigcRX2qw3HlKtCdcwB0Krl6p4rut6SbVRwnQtoCHM4ekLYj3K-iNUCMFiPfrmgVOMzPOkSa3CMm1OYR8osyX4JNgc0vIe98UL1cmpivlfRyAEscsIMgnfWrFSDZpnelOkYlcNhRVKfO--ZCg5deYYDFFkrsqrCYbJrPrSVBv-j0yJOVIymtRoZQbOa-xNir9I5F6g-QjnWcSSEl16Nu7FxCj5Y97FQ2-6dOke8EFg9QBggeQTDCqriTfnIf_t_klL_Vhdr_xJodD9AtYDxgzUEwaovbwvv_SYdnZN-6RTUR6lseKstMHYKfPUxpqQsEG6IryhicCZgaFlx_VtxEz9PFR5rd4x6inxCJvgYmgBPJCtAugF96izU8zOiAlCjZ5OK9jutO9otjx4ri6u_whYMqChAmlrvGrmJ9dAU6xDMsrNj5G-sYnPteK5x8sp-raFEQqp_veN-2m00
