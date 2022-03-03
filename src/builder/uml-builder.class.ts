@@ -35,9 +35,9 @@ export class UmlBuilder {
 	 * @public
 	 * @returns {string} An uml string.
 	 */
-	public buildUml(): string {
+	public async buildUml(): Promise<string> {
 		const connectionMetadataBuilder = new ConnectionMetadataBuilder( this.connection );
-		const entityMetadatas = connectionMetadataBuilder.buildEntityMetadatas( this.connection.options.entities || [] );
+		const entityMetadatas = await connectionMetadataBuilder.buildEntityMetadatas( this.connection.options.entities || [] );
 		if ( !entityMetadatas.length ) {
 			throw new Error( 'No entities have been found. Please, check your typeorm config to make sure you have configured it correctly.' );
 		}
