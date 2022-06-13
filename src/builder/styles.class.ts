@@ -56,6 +56,7 @@ export class Styles {
 		yield `!define pkey(x) {field} <b><color:${ this.skinParams.colors.get( 'pkey' ) || 'DarkGoldenRod' }><&key></color> x</b>`;
 		yield `!define fkey(x) {field} <color:${ this.skinParams.colors.get( 'fkey' ) || '#AAAAAA' }><&key></color> x`;
 		yield `!define column(x) {field} <color:${ this.skinParams.colors.get( 'column' ) || '#EFEFEF' }><&media-record></color> x`;
+		yield `!define rcolumn(x) {field} <color:${ this.skinParams.colors.get( 'rcolumn' ) || '#A19F9F' }><&media-record></color> x`;
 	}
 
 	/**

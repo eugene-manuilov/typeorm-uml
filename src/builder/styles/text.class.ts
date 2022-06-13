@@ -13,6 +13,7 @@ export class TextStyles extends Styles {
 		yield '!define pkey(x) x';
 		yield '!define fkey(x) x';
 		yield '!define column(x) x';
+		yield '!define rcolumn(x) x';
 	}
 
 	/**
