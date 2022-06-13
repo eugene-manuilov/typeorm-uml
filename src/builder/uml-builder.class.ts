@@ -92,7 +92,11 @@ export class UmlBuilder {
 			suffix += '<<FK>>';
 			columnName = `fkey( ${ column.databaseName } )`;
 		} else {
-			columnName = `column( ${ column.databaseName } )`;
+			if ( typeof column.isNullable === 'undefined' || !column.isNullable ) {
+				columnName = `rcolumn( ${ column.databaseName } )`;
+			} else {
+				columnName = `column( ${ column.databaseName } )`;
+			}
 		}
 
 		let length = this.getColumnLength( column );
