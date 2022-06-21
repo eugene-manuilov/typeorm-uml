@@ -141,6 +141,7 @@ export class TypeormUml {
 			colors: flags.colors,
 			entityNamesOnly: flags['with-entity-names-only'],
 			tableNamesOnly: flags['with-table-names-only'],
+			omitColumns: flags['omit-columns'],
 		};
 
 		if ( flags.monochrome ) {

@@ -113,6 +113,9 @@ export class Styles {
 		yield 'hide stereotypes';
 		yield 'hide methods';
 		yield 'hide circle';
+		if ( this.skinParams.omitColumns ) {
+			yield 'hide fields';
+		}
 	}
 
 	/**

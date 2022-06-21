@@ -79,6 +79,10 @@ class TypeormUmlCommand extends Command {
 			description: 'URL of the plantuml server to use.',
 			default: 'http://www.plantuml.com/plantuml',
 		} ),
+		'omit-columns': flags.boolean( {
+			description: 'Whether or not to display columns',
+			default: false,
+		} ),
 	};
 
 	/**

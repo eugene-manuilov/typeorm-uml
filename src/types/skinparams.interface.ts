@@ -10,4 +10,5 @@ export interface SkinParams {
 	roundcorner?: number,
 	shadowing?: 'true' | 'false',
 	tableNamesOnly?: boolean,
+	omitColumns?: boolean,
 }
