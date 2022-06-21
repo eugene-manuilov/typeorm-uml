@@ -60,7 +60,7 @@ export class UmlBuilder {
 			}
 
 			uml += `\ntable( ${ entity.name }, ${ entity.tableNameWithoutPrefix } ) as ${ entity.tableNameWithoutPrefix } {\n${
-				entity.columns.map( this.buildColumn, this ).join( '' )
+				this.flags['omit-columns'] ? '' : entity.columns.map( this.buildColumn, this ).join( '' )
 			}}\n`;
 
 			foreignKeys += this.buildForeignKeys( entity );
