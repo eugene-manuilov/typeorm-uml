@@ -83,6 +83,10 @@ class TypeormUmlCommand extends Command {
 			description: 'Whether or not to display columns',
 			default: false,
 		} ),
+		'omit-generated-pivot-tables': flags.boolean( {
+			description: 'Whether or not to display auto generated pivot tables',
+			default: false,
+		} ),
 	};
 
 	/**

@@ -59,9 +59,11 @@ export class UmlBuilder {
 				continue;
 			}
 
-			uml += `\ntable( ${ entity.name }, ${ entity.tableNameWithoutPrefix } ) as ${ entity.tableNameWithoutPrefix } {\n${
-				this.flags['omit-columns'] ? '' : entity.columns.map( this.buildColumn, this ).join( '' )
-			}}\n`;
+			if ( !( this.flags['omit-generated-pivot-tables'] && entity.isJunction ) ) {
+				uml += `\ntable( ${ entity.name }, ${ entity.tableNameWithoutPrefix } ) as ${ entity.tableNameWithoutPrefix } {\n${
+					this.flags['omit-columns'] ? '' : entity.columns.map( this.buildColumn, this ).join( '' )
+				}}\n`;
+			}
 
 			foreignKeys += this.buildForeignKeys( entity );
 		}
@@ -141,12 +143,34 @@ export class UmlBuilder {
 		const zeroOrMore = 'o{';
 		const oneOrMore = '|{';
 
-		let relationship = columns.some( ( column ) => !column.isNullable ) ? oneOrMore : zeroOrMore;
-		if ( columns.length === 1 && columns[0].relationMetadata?.isOneToOne ) {
-			relationship = '||';
+		let relation = '';
+		let tableFrom = '';
+		let tableTo = '';
+
+		if ( entity.isJunction && this.flags['omit-generated-pivot-tables'] ) {
+			const ownerColumn = entity.ownerColumns[0];
+			const inverseColumn = entity.inverseColumns[0];
+			const actualColumn = foreignKey.columns[0];
+			const isOwner = ownerColumn === actualColumn;
+
+			if ( !isOwner ) {
+				return '';
+			}
+
+			tableFrom = ownerColumn.referencedColumn.entityMetadata.tablePath;
+			tableTo = inverseColumn.referencedColumn.entityMetadata.tablePath;
+			relation = '}o--o{';
+		} else {
+			let relationship = columns.some( ( column ) => !column.isNullable ) ? oneOrMore : zeroOrMore;
+			if ( columns.length === 1 && columns[0].relationMetadata?.isOneToOne ) {
+				relationship = '||';
+			}
+			tableFrom = foreignKey.referencedTablePath;
+			tableTo = entity.tableNameWithoutPrefix;
+			relation = `||--${ relationship }`;
 		}
 
-		return `"${ foreignKey.referencedTablePath }" ||--${ relationship } "${ entity.tableNameWithoutPrefix }"\n`;
+		return `"${ tableFrom }" ${ relation } "${ tableTo }"\n`;
 	}
 
 	/**

@@ -17,5 +17,6 @@ export interface Flags {
 	['with-entity-names-only']?: boolean,
 	['with-table-names-only']?: boolean,
 	['with-enum-values']?: boolean,
-	['omit-columns']?: boolean
+	['omit-columns']?: boolean,
+	['omit-generated-pivot-tables']?: boolean
 }
