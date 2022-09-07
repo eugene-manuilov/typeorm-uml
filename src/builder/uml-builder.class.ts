@@ -1,5 +1,4 @@
-import { EntityMetadata, Connection } from 'typeorm';
-import { ConnectionMetadataBuilder } from 'typeorm/connection/ConnectionMetadataBuilder';
+import { DataSource, EntityMetadata } from 'typeorm';
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { ForeignKeyMetadata } from 'typeorm/metadata/ForeignKeyMetadata';
 
@@ -19,12 +18,12 @@ export class UmlBuilder {
 	 * Constructor.
 	 *
 	 * @public
-	 * @param {Connection} connection A database connection.
+	 * @param {DataSource} dataSource A database connection.
 	 * @param {Flags} flags An object with command flags.
 	 * @param {Styles} styles Diagram styles.
 	 */
 	public constructor(
-		protected readonly connection: Connection,
+		protected readonly dataSource: DataSource,
 		protected readonly flags: Flags,
 		protected readonly styles: Styles
 	) {}
@@ -36,8 +35,7 @@ export class UmlBuilder {
 	 * @returns {string} An uml string.
 	 */
 	public async buildUml(): Promise<string> {
-		const connectionMetadataBuilder = new ConnectionMetadataBuilder( this.connection );
-		const entityMetadatas = await connectionMetadataBuilder.buildEntityMetadatas( this.connection.options.entities || [] );
+		const entityMetadatas = this.dataSource.entityMetadatas;
 		if ( !entityMetadatas.length ) {
 			throw new Error( 'No entities have been found. Please, check your typeorm config to make sure you have configured it correctly.' );
 		}
@@ -96,10 +94,10 @@ export class UmlBuilder {
 		}
 
 		let length = this.getColumnLength( column );
-		const type = this.connection.driver.normalizeType( column );
+		const type = this.dataSource.driver.normalizeType( column );
 
-		if ( !length && this.connection.driver.dataTypeDefaults && this.connection.driver.dataTypeDefaults[type] ) {
-			length = this.getColumnLength( ( this.connection.driver.dataTypeDefaults[type] as unknown ) as ColumnDataTypeDefaults );
+		if ( !length && this.dataSource.driver.dataTypeDefaults && this.dataSource.driver.dataTypeDefaults[type] ) {
+			length = this.getColumnLength( ( this.dataSource.driver.dataTypeDefaults[type] as unknown ) as ColumnDataTypeDefaults );
 		}
 
 		if ( length ) {

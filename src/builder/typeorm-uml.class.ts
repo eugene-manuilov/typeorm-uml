@@ -1,14 +1,14 @@
-import { isAbsolute, resolve, dirname, basename } from 'path';
 import { createWriteStream, writeFileSync } from 'fs';
 import { get } from 'http';
+import { basename, dirname, isAbsolute, resolve } from 'path';
 
 import * as plantumlEncoder from 'plantuml-encoder';
-import { ConnectionOptionsReader, getConnectionManager, Connection } from 'typeorm';
+import { ConnectionOptionsReader, DataSource } from 'typeorm';
 
 import { Flags, Format, SkinParams } from '../types';
-import { UmlBuilder } from './uml-builder.class';
-import { Styles } from './styles.class';
 import { MonochromeStyles, TextStyles } from './styles';
+import { Styles } from './styles.class';
+import { UmlBuilder } from './uml-builder.class';
 
 export class TypeormUml {
 
@@ -17,13 +17,13 @@ export class TypeormUml {
 	 *
 	 * @async
 	 * @public
-	 * @param {string|Connection} configNameOrConnection The typeorm config filename or connection instance.
+	 * @param {string|DataSource} configNameOrConnection The typeorm config filename or connection instance.
 	 * @param {Flags} flags Build flags.
 	 * @returns {string} Diagram URL or UML code depending on selected format.
 	 */
-	public async build( configNameOrConnection: string | Connection, flags: Flags ) : Promise<string> {
+	public async build( configNameOrConnection: string | DataSource, flags: Flags ) : Promise<string> {
 		const styles = this.getStyles( flags );
-		const connection: Connection = typeof configNameOrConnection === 'string'
+		const connection: DataSource = typeof configNameOrConnection === 'string'
 			? await this.getConnection( configNameOrConnection, flags )
 			: configNameOrConnection;
 
@@ -64,7 +64,7 @@ export class TypeormUml {
 	 * @param {Flags} flags An object with command flags.
 	 * @returns {Connection} A connection instance.
 	 */
-	private async getConnection( configPath: string, flags: Flags ): Promise<Connection> {
+	private async getConnection( configPath: string, flags: Flags ): Promise<DataSource> {
 		let root = process.cwd();
 		let configName = configPath;
 
@@ -78,7 +78,9 @@ export class TypeormUml {
 
 		const connectionOptionsReader = new ConnectionOptionsReader( { root, configName } );
 		const connectionOptions = await connectionOptionsReader.get( flags.connection || 'default' );
-		return getConnectionManager().create( connectionOptions );
+		const dataSource = new DataSource( connectionOptions );
+		await dataSource.initialize();
+		return dataSource;
 	}
 
 	/**
