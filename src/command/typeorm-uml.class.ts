@@ -79,6 +79,10 @@ class TypeormUmlCommand extends Command {
 			description: 'URL of the plantuml server to use.',
 			default: 'http://www.plantuml.com/plantuml',
 		} ),
+		'postgresql-ignore-schema': flags.boolean( {
+			description: 'Whether or not to ignore Postgresql schema setting.',
+			default: false,
+		} ),
 	};
 
 	/**

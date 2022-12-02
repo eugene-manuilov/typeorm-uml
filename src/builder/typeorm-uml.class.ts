@@ -3,7 +3,7 @@ import { createWriteStream, writeFileSync } from 'fs';
 import { get } from 'http';
 
 import * as plantumlEncoder from 'plantuml-encoder';
-import { ConnectionOptionsReader, getConnectionManager, Connection } from 'typeorm';
+import { ConnectionOptionsReader, getConnectionManager, Connection, ConnectionOptions } from 'typeorm';
 
 import { Flags, Format, SkinParams } from '../types';
 import { UmlBuilder } from './uml-builder.class';
@@ -55,6 +55,17 @@ export class TypeormUml {
 		return url;
 	}
 
+	private manageSchema( rawconnectionOptions: ConnectionOptions, flags: Flags ): ConnectionOptions {
+		if ( 'schema' in rawconnectionOptions && rawconnectionOptions.schema && flags['ignore-schema'] ) {
+			return {
+				...rawconnectionOptions,
+				schema: '',
+			};
+		} else {
+			return rawconnectionOptions;
+		}
+	}
+
 	/**
 	 * Creates and returns Typeorm connection based on selected configuration file.
 	 *
@@ -77,7 +88,8 @@ export class TypeormUml {
 		process.chdir( cwd );
 
 		const connectionOptionsReader = new ConnectionOptionsReader( { root, configName } );
-		const connectionOptions = await connectionOptionsReader.get( flags.connection || 'default' );
+		const rawconnectionOptions = await connectionOptionsReader.get( flags.connection || 'default' );
+		const connectionOptions = this.manageSchema( rawconnectionOptions, flags );
 		return getConnectionManager().create( connectionOptions );
 	}
 
